@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,8 +68,8 @@
       transition: all 0.3s ease;
     }
 
-    .input-group input:focus + label,
-    .input-group input:not(:placeholder-shown) + label {
+    .input-group input:focus+label,
+    .input-group input:not(:placeholder-shown)+label {
       top: -10px;
       font-size: 12px;
       color: #ffffff;
@@ -119,6 +120,7 @@
         opacity: 0;
         transform: translateY(-20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -151,12 +153,13 @@
     }
   </style>
 </head>
+
 <body>
   <img src="images/codeigo-logo.png" alt="">
   <div class="login-container">
     <!-- Login Form -->
     <div id="loginForm">
-      <h1>Codeigos</h1>
+      <h1>Codeigo</h1>
       <div class="input-group">
         <input type="email" id="Email" placeholder=" " required />
         <label for="Email">Email</label>
@@ -196,15 +199,15 @@
 
     // Your Firebase config
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBXxaDjPCID1Zrha2t-JjKrPR9A5bF8MVc",
-  authDomain: "codeigo-application.firebaseapp.com",
-  projectId: "codeigo-application",
-  storageBucket: "codeigo-application.firebasestorage.app",
-  messagingSenderId: "866142616520",
-  appId: "1:866142616520:web:c91f4cf5c2cdf8db94defd",
-  measurementId: "G-F06YJRKQKZ"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBXxaDjPCID1Zrha2t-JjKrPR9A5bF8MVc",
+      authDomain: "codeigo-application.firebaseapp.com",
+      projectId: "codeigo-application",
+      storageBucket: "codeigo-application.firebasestorage.app",
+      messagingSenderId: "866142616520",
+      appId: "1:866142616520:web:c91f4cf5c2cdf8db94defd",
+      measurementId: "G-F06YJRKQKZ"
+    };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
@@ -233,8 +236,7 @@ const firebaseConfig = {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           alert("Sign Up successful!");
-          window.location.href = "
-            introduction.html"; // Redirect after Sign Up
+          window.location.href = "introduction.html"; // Redirect after Sign Up
         })
         .catch((error) => {
           alert("Error: " + error.message);
@@ -253,11 +255,12 @@ const firebaseConfig = {
     });
 
     if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js")
+      navigator.serviceWorker.register("/service-worker.js")
         .then(() => console.log("Service Worker Registered"))
         .catch((error) => console.log("Service Worker Registration Failed", error));
-}
+    }
 
   </script>
 </body>
+
 </html>
