@@ -218,7 +218,7 @@ const firebaseConfig = {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           alert("Login successful!");
-          window.location.href = "/introduction.html"; // Redirect after login
+          window.location.href = "introduction.html"; // Redirect after login
         })
         .catch((error) => {
           alert("Error: " + error.message);
@@ -233,7 +233,8 @@ const firebaseConfig = {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           alert("Sign Up successful!");
-          window.location.href = "/introduction.html"; // Redirect after Sign Up
+          window.location.href = "
+            introduction.html"; // Redirect after Sign Up
         })
         .catch((error) => {
           alert("Error: " + error.message);
