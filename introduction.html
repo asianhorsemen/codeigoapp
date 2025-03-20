@@ -386,7 +386,6 @@
       <video src="video/robot.mp4" autoplay loop muted onpause="this.play()"
         controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
     </div>
-    <!-- Blank Code Area with Underscores -->
     <div class="pagemove">
       <p>"Click the button to run your first program and print 'Hello, World!'. a key first step in coding</p>
       <div id="codeArea"
@@ -397,7 +396,6 @@
         <span id="slot4">_____</span>
       </div>
 
-      <!-- Buttons to Fill Code -->
       <button class="option-button" id="btnPrint" onclick="fillSlot(1, 'print', this)">print</button>
       <button class="option-button" id="btnOpenParen" onclick="fillSlot(2, '(', this)">(</button>
       <button class="option-button" id="btnHello" onclick="fillSlot(3, 'hello world', this)">"hello world"</button>
@@ -418,7 +416,6 @@
       const selectedText = document.getElementById('selectedText' + pageNumber);
       selectedText.innerText = `Selected: ${option}`;
 
-      // Automatically navigate to the next page after 1 second
       setTimeout(() => {
         nextPage(pageNumber + 1);
       }, 1000);
@@ -428,7 +425,6 @@
       let slot = document.getElementById('slot' + slotNumber);
       if (slot.innerText === "_____") {
         slot.innerText = text;
-        // Hide the button after it's clicked
         if (buttonElement) {
           buttonElement.style.display = 'none';
         }
@@ -442,7 +438,6 @@
       let slot3 = document.getElementById('slot3').innerText.trim();
       let slot4 = document.getElementById('slot4').innerText.trim();
 
-      // Check if all slots are filled with the correct values
       if (slot1 === "print" && slot2 === "(" &&
         (slot3 === '"hello world"' || slot3 === "hello world") && slot4 === ")") {
         setTimeout(() => {
