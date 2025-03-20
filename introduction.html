@@ -23,29 +23,6 @@
       display: block;
     }
 
-    /* Progress bar */
-    .progress-container {
-      margin-top: 20px;
-      margin-left: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-    }
-
-    .progress-dot {
-      width: 10px;
-      height: 10px;
-      margin: 0 5px;
-      background-color: #ccc;
-      border-radius: 50%;
-      transition: background-color 0.3s;
-    }
-
-    .progress-dot.active {
-      background-color: blue;
-    }
-
     .next-button {
       padding: 10px 20px;
       position: relative;
@@ -72,7 +49,6 @@
         opacity: 1;
       }
     }
-
 
     .next-button:hover {
       background-color: #45a049;
@@ -327,7 +303,6 @@
       top: 80px;
     }
 
-
     @keyframes typing {
       from {
         width: 0
@@ -346,22 +321,10 @@
 
 <body>
   <div class="introduction-sticky">
-    <div class="progress-container">
-      <div id="dot1" class="progress-dot active"></div>
-      <div id="dot2" class="progress-dot"></div>
-      <div id="dot3" class="progress-dot"></div>
-      <div id="dot4" class="progress-dot"></div>
-      <div id="dot5" class="progress-dot"></div>
-      <div id="dot6" class="progress-dot"></div>
-    </div>
+    <!-- Progress dots removed -->
   </div>
 
-  <!-- Page Content 
-      <div id="page1" class="page active">
-        <img src="images/codeigo-logo.png" alt="">
-        <p>CODEIGO is your interactive Python learning app, designed to make coding fun and easy!</p>
-        <button class="next-button" onclick="nextPage(2)">START</button>
-      </div>-->
+  <!-- Page Content -->
   <div id="page1" class="page active">
     <video src="/video/robot.mp4" autoplay loop muted onpause="this.play()"
       controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
@@ -447,10 +410,8 @@
 
     function nextPage(pageNumber) {
       document.getElementById('page' + currentPage).classList.remove('active');
-      document.getElementById('dot' + currentPage).classList.remove('active');
       currentPage = pageNumber;
       document.getElementById('page' + currentPage).classList.add('active');
-      document.getElementById('dot' + currentPage).classList.add('active');
     }
 
     function selectOption(option, pageNumber) {
@@ -490,8 +451,6 @@
       }
     }
   </script>
-
-
 </body>
 
 </html>
