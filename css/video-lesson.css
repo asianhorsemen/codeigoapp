@@ -1,0 +1,264 @@
+html,
+body {
+    overflow-x: hidden;
+
+}
+
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgba(1, 1, 27, 1);
+    color: white;
+    font-family: monospace;
+}
+
+.video-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 85%;
+    padding: 20px;
+    position: fixed;
+    margin: 0 auto;
+}
+
+.video-header i {
+    font-size: 20px;
+    color: white;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.video-header h2 {
+    font-size: 20px;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.video-container {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background-color: rgba(1, 1, 27, 0.95);
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 15px rgba(159, 165, 255, 0.5);
+}
+
+.video-player {
+    border-radius: 20px;
+    width: 360px;
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+.video-button button {
+    position: relative;
+    top: 350px;
+    background-color: rgb(2, 2, 39);
+    border-radius: 20px;
+    border: 1px rgba(90, 100, 255, 1) solid;
+    box-shadow: 0px 0px 10px rgba(159, 165, 255, 0.5);
+    color: white;
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px;
+    height: 75px;
+    text-align: left;
+    padding: 10px;
+    width: 95%;
+    cursor: pointer;
+}
+
+.video-button button:disabled {
+    background-color: rgba(0, 0, 10, 0.911);
+    color: #A1A1A1;
+    cursor: not-allowed;
+    transform: scale(0.98);
+}
+
+.icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.lock-icon {
+    color: rgba(255, 0, 0, 0.8);
+}
+
+.play-icon {
+    color: rgba(0, 255, 0, 0.8);
+}
+
+.sticky {
+    position: fixed;
+    width: 100%;
+    z-index: 300;
+}
+
+/* Header */
+.homepage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(1, 1, 27, 1);
+    padding: 10px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.homepage-header img {
+    height: 40px;
+    width: 40px;
+}
+
+.homepage-header h1 {
+    margin: 0;
+    font-size: 18px;
+}
+
+/* Profile Icon */
+.profile-icon {
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.navbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(38, 38, 150);
+    padding: 5px 0;
+    z-index: 20;
+    gap: 10px;
+    border-radius: 20px 20px 0 0;
+}
+
+.navbar a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar a.active {
+    height: 30px;
+    background-color: rgba(1, 1, 27, 1);
+    transform: translateY(-20px) scale(1.2);
+    /* Move up and scale */
+}
+
+.navbar a.active svg {
+    color: white;
+    transform: scale(1.2);
+    /* Scale the icon */
+}
+
+.navbar a.active span {
+    color: rgba(1, 1, 27, 1);
+}
+
+/* Animation for the active icon */
+@keyframes iconBounce {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-10px) scale(1.2);
+    }
+
+    100% {
+        transform: translateY(-20px) scale(1.2);
+    }
+}
+
+.navbar a.active {
+    animation: iconBounce 0.5s ease-in-out;
+}
+
+/* Sections */
+.section {
+    display: none;
+    padding: 20px;
+    text-align: center;
+}
+
+.active-section {
+    display: block;
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 600px) {
+    .video-container {
+        top: 90px;
+        width: 90%;
+    }
+
+    .video-player {
+        width: 100%;
+    }
+
+    .video-button button {
+        top: 250px;
+        font-size: 16px;
+        height: 60px;
+        padding: 8px;
+    }
+
+    .video-button button span {
+        font-size: 35px;
+    }
+
+    .navbar {
+        gap: 5px;
+    }
+
+    .navbar svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .navbar span {
+        font-size: 10px;
+    }
+
+
+    .navbar a.active {
+        transform: translateY(-15px) scale(1.1);
+    }
+
+    .navbar a.active svg {
+        transform: scale(1.1);
+    }
+
+    .homepage-header h1 {
+        font-size: 16px;
+    }
+
+    .homepage-header img {
+        height: 60px;
+        width: 60px;
+    }
+}

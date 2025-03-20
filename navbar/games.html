@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Puzzle Game</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/css/games.css">
+</head>
+<body>
+  <div class="homepage-header">
+    <div class="header-left">
+      <img src="/images/codeigo-logo.png" alt="Logo">
+      <h1>CODEIGO</h1>
+    </div>
+    <i data-lucide="user" class="profile-icon"></i>
+  </div>
+
+  <div class="navbar">
+    <a href="homepage.html"><i data-lucide="home"></i> <span>Home</span></a>
+    <a href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
+    <a href="interpreter.html" onclick="showSection('compiler')"><i data-lucide="code"></i>
+      <span>Compiler</span></a>
+    <a class="active" href="games.html" onclick="showSection('games')"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
+    <a href="exercise.html" onclick="showSection('exercise')"><i data-lucide="book-open"></i>
+      <span>Exercise</span></a>
+  </div>
+
+  <div class="container">
+    <div class="progress-indicator" id="progressIndicator"></div>
+
+    <p id="description"></p>
+    <div class="code" id="codeDisplay"></div>
+
+    <div id="answerButtons"></div>
+
+    <div class="multiple-choice-container" id="multipleChoiceContainer"></div>
+
+    <div class="result hidden" id="result"></div>
+  </div>
+    <button class="run-button" onclick="runCode()">Run</button>
+    <button class="reset-button" onclick="resetGame()">
+        <i data-lucide="rotate-ccw"></i>
+      </button>
+      
+  <audio id="backgroundMusic" autoplay loop muted>
+    <source src="assets_/designUI/sounds/background-music.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="correctSound">
+    <source src="/sounds/correct-answer.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="incorrectSound">
+    <source src="/sounds/wrong-answer.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script src="/javarice/games.js"></script>
+</body>
+</html>

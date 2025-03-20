@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/lucide-icons@0.0.103/dist/lucide.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <title>Video Lessons</title>
+  <link rel="stylesheet" href="/css/video-lesson.css">
+  
+</head>
+
+<body>
+    <div class="sticky">
+    <div class="homepage-header">
+      <div class="header-left">
+        <img src="/images/codeigo-logo.png" alt="Logo">
+
+        <h1>CODEIGO</h1>
+      </div>
+      <i data-lucide="user" class="profile-icon"></i>
+    </div>
+
+    
+  <div class="navbar">
+    <a href="homepage.html" ><i data-lucide="home"></i> <span>Home</span></a>
+    <a class="active" href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
+    <a href="interpreter.html" onclick="showSection('compiler')"><i data-lucide="code"></i> <span>Compiler</span></a>
+    <a href="games.html" onclick="showSection('games')"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
+    <a href="exercise.html" onclick="showSection('exercise')"><i data-lucide="book-open"></i>
+      <span>Exercise</span></a>
+  </div>
+
+  <div class="video-container">
+    <video id="videoPlayer" class="video-player" controls>
+      <source id="videoSource" src="/video/lesson-1.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="video-button">
+    <button id="lesson1" onclick="changeVideo('/video/lesson-2.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">01</span> Introduction to Python
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson2" onclick="changeVideo('assets_/Video_Lesson/lesson-4.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">02</span> Variables and Data Types
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson3" onclick="changeVideo('assets_/Video_Lesson/Lesson3.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">03</span> Lesson 3
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson4" onclick="changeVideo('assets_/Video_Lesson/Lesson4.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">04</span> Lesson 4
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson5" onclick="changeVideo('assets_/Video_Lesson/Lesson5.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">05</span> Lesson 5
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson6" onclick="changeVideo('assets_/Video_Lesson/Lesson6.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">06</span> Lesson 6
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson7" onclick="changeVideo('assets_/Video_Lesson/Lesson7.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">07</span> Lesson 7
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson8" onclick="changeVideo('assets_/Video_Lesson/Lesson8.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">08</span> Lesson 8
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson9" onclick="changeVideo('assets_/Video_Lesson/Lesson9.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">09</span> Lesson 9
+      <i class="lucide lock-icon lock"></i>
+    </button>
+    <button id="lesson10" onclick="changeVideo('assets_/Video_Lesson/Lesson10.mp4')" disabled>
+      <span style="font-size: 45px; font-family: monospace;">10</span> Lesson 10
+      <i class="lucide lock-icon lock"></i>
+    </button>
+  </div>
+
+<script src="/javarice/video-lesson.js"></script>
+</body>
+
+</html>

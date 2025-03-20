@@ -1,0 +1,320 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgba(1, 1, 27, 1);
+    color: white;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+  }
+
+  .homepage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    width: 100%;
+    background-color: rgba(1, 1, 27, 1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .homepage-header img {
+    height: 60px;
+    width: 60px;
+  }
+
+  .homepage-header h1 {
+    margin: 0;
+    font-size: 18px;
+    color: white;
+  }
+
+  .profile-icon {
+    cursor: pointer;
+    margin-right: 15px;
+    color: white;
+  }
+
+  .container {
+    text-align: center;
+    margin: 0 auto;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    top: 80px;
+    height: 100%;
+  }
+
+  .progress-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  .progress-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: background-color 0.3s;
+  }
+
+  .progress-circle.active {
+    background-color: white;
+  }
+
+  .code {
+    background-color: rgba(2, 2, 66, 1);
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+    text-align: left;
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+  }
+
+  .blank-input {
+    background-color: rgb(22, 22, 107);
+    color: white;
+    border: 1px solid rgb(10, 10, 66);
+    border-radius: 3px;
+    padding: 5px;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    width: auto; /* Width will be set dynamically */
+  }
+
+  .run-button {
+    position: absolute;
+    bottom: 90px;
+    left: 0px;
+    background-color: rgb(2, 2, 39);
+    border-radius: 10px;
+    border: 3px solid rgba(90, 100, 255, 1);
+    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 25px;
+    font-weight: bold;
+    margin: 10px;
+    text-align: center;
+    padding: 10px;
+    height: 7%;
+    width: 60%;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+  }
+
+  .run-button:active {
+    background-color: rgb(2, 2, 39);
+    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
+    transform: translateY(10px);
+  }
+  
+  .reset-button {
+    position: absolute;
+    bottom: 90px;
+    right: 0px;
+    background-color: rgb(2, 2, 39);
+    border-radius: 10px;
+    border: 3px solid rgba(90, 100, 255, 1);
+    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px;
+    text-align: center;
+    padding: 10px;
+    width: 30%;
+    height: 7%;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+  }
+
+  .reset-button:active {
+    background-color: rgb(2, 2, 39);
+    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
+    transform: translateY(10px);
+  }
+
+  .run-button:hover, .reset-button:hover {
+    background-color: #0056b3;
+  }
+
+  .result {
+    margin-top: 20px;
+    font-size: 1.2em;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .correct {
+    background-color: green !important;
+  }
+
+  .incorrect {
+    background-color: red !important;
+  }
+
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+
+  .answer-button {
+    background-color: rgba(90, 100, 255, 1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+  }
+
+  .answer-button:hover {
+    background-color: #0056b3;
+  }
+
+  .multiple-choice-button {
+    background-color: rgba(90, 100, 255, 1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+
+  .multiple-choice-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .multiple-choice-container {
+    margin-top: 15px;
+  }
+
+  @media (max-width: 600px) {
+    .homepage-header img {
+      height: 40px;
+      width: 40px;
+    }
+
+    .homepage-header h1 {
+      font-size: 16px;
+    }
+
+    .container {
+      top: 60px;
+    }
+
+    .code {
+      font-size: 13px;
+      padding: 10px;
+    }
+
+    .blank-input {
+      font-size: 13px;
+    }
+
+    .run-button, .reset-button {
+      font-size: 14px;
+      padding: 10px 16px;
+    }
+
+    .result {
+      font-size: 1em;
+    }
+
+    .progress-circle {
+      width: 8px;
+      height: 8px;
+    }
+
+    .multiple-choice-button {
+      font-size: 12px;
+      padding: 8px 10px;
+    }
+    .navbar {
+      gap: 5px;
+    }
+
+    .navbar svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .navbar span {
+      font-size: 10px;
+    }
+  }
+  i {
+      font-size: 20px;
+  }
+
+  .navbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(38, 38, 150);
+    padding: 10px 0;
+    gap: 10px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .navbar a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .navbar a.active {
+    height: 30px;
+    background-color: rgba(1, 1, 27, 1);
+    transform: translateY(-20px) scale(1.2);
+  }
+
+  .navbar a.active svg {
+    color: white;
+    transform: scale(1.2);
+  }
+
+  .navbar a.active span {
+    color: rgba(1, 1, 27, 1);
+  }

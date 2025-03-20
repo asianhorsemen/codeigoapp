@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: rgba(1, 1, 27, 1);
+      color: white;
+      font-family: monospace;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 85%;
+      padding: 20px;
+    }
+
+    .profile-header i {
+      font-size: 20px;
+      color: white;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
+    .profile-header h1 {
+      font-size: 20px;
+      margin: 0;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .container img {
+      position: relative;
+      top: 30px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+    }
+
+    .profile-name h1 {
+      color: rgba(115, 101, 177, 1);
+      font-size: 18px;
+      position: relative;
+      top: 40px;
+      text-align: center;
+    }
+
+    .profile-name h2 {
+      color: white;
+      font-size: 18px;
+      position: relative;
+      top: 40px;
+      text-align: center;
+    }
+
+    /* Container for the three boxes */
+    .box-container {
+      display: flex;
+      gap: 20px;
+      justify-content: space-around;
+      margin-top: 80px;
+      padding: 0 20px;
+    }
+
+    /* Individual box styling */
+    .box {
+      width: 30%; /* Adjust width as needed */
+      background-color: rgba(115, 101, 177, 0.2); /* Box background color */
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .box img {
+      width: 50px; /* Adjust image size */
+      height: 50px;
+      margin-bottom: 10px;
+    }
+
+    .box h3 {
+      font-size: 18px;
+      margin: 10px 0;
+      color: rgba(115, 101, 177, 1);
+    }
+
+    .box p {
+      font-size: 14px;
+      color: white;
+    }
+
+    /* Modal for image selection */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: rgba(1, 1, 27, 1);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .modal-content img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border 0.3s ease;
+    }
+
+    .modal-content img:hover {
+      border: 2px solid rgba(115, 101, 177, 1);
+    }
+
+    .modal-content button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: rgba(115, 101, 177, 1);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background-color: rgba(90, 80, 150, 1);
+    }
+    h3 {
+      position: relative;
+      bottom: 70px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="profile-header">
+      <i class="fa-solid fa-angle-left"></i>
+      <h1>Profile</h1>
+    </div>
+
+    <!-- Profile Image -->
+    <img id="profile-pic" src="images/profile-icon.png" alt="Profile Icon" onclick="openModal()">
+
+    <div class="profile-name">
+      <h1>username</h1>
+      <h2>Marlon Ben V. Tan</h2>
+    </div>
+
+    <!-- Three Boxes -->
+    <div class="box-container">
+      <!-- Time Box -->
+      <div class="box">
+        <img src="images/profile-time.png" alt="Time Icon">
+        <h3>Time</h3>
+        <p id="timer">00:00:00</p> <!-- Timer will be updated here -->
+      </div>
+
+      <!-- Exp Box -->
+      <div class="box">
+        <img src="images/profile-exp.png" alt="Exp Icon">
+        <h3>Exp</h3>
+        <p>500 XP</p>
+      </div>
+
+      <!-- Level Box -->
+      <div class="box">
+        <img src="images/profile-level.png" alt="Level Icon">
+        <h3>Level</h3>
+        <p>5</p>
+      </div>
+    </div>
+
+    <!-- Modal for Image Selection -->
+    <div id="image-modal" class="modal">
+      <div class="modal-content">
+        <h2>Choose a Profile Picture</h2>
+        <div>
+          <img src="images/profile-icon-1.png" alt="Profile 1" onclick="selectImage('images/profile-icon-1.png')">
+          <img src="images/profile-icon-2.png" alt="Profile 2" onclick="selectImage('images/profile-icon-2.png')">
+          <img src="images/profile-icon-3.png" alt="Profile 3" onclick="selectImage('images/profile-icon-3.png')">
+        </div>
+        <button onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to open the modal
+    function openModal() {
+      document.getElementById('image-modal').style.display = 'flex';
+    }
+
+    // Function to close the modal
+    function closeModal() {
+      document.getElementById('image-modal').style.display = 'none';
+    }
+
+    // Function to select an image from the modal
+    function selectImage(imageSrc) {
+      const profilePic = document.getElementById('profile-pic');
+      profilePic.src = imageSrc;
+      closeModal();
+    }
+
+    // Timer Logic
+    let startTime = Date.now(); // Record the start time
+    const timerElement = document.getElementById('timer');
+
+    function updateTimer() {
+      const currentTime = Date.now();
+      const elapsedTime = currentTime - startTime; // Time in milliseconds
+
+      // Convert milliseconds to hours, minutes, and seconds
+      const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+      const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+
+      // Format the time as HH:MM:SS
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      // Update the timer display
+      timerElement.textContent = formattedTime;
+    }
+
+    // Update the timer every second
+    setInterval(updateTimer, 1000);
+  </script>
+</body>
+
+</html>

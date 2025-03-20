@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python Exercises</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/css/exercise.css">
+</head>
+
+<body>
+  
+  
+  
+  <div class="sticky">
+    <div class="homepage-header">
+      <div class="header-left">
+        <img src="/images/codeigo-logo.png" alt="Logo">
+        <h1>CODEIGO</h1>
+      </div>
+      <i data-lucide="user" class="profile-icon"></i>
+    </div>
+    <div class="navbar">
+      <a href="homepage.html"><i data-lucide="home"></i> <span>Home</span></a>
+      <a href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
+      <a href="interpreter.html" onclick="showSection('compiler')"><i data-lucide="code"></i> <span>Compiler</span></a>
+      <a href="games.html" onclick="showSection('games')"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
+      <a class="active" onclick="showSection('exercise')"><i data-lucide="book-open"></i> <span>Exercise</span></a>
+    </div>
+  </div>
+
+  <div class="button-container">
+    <button class="exercise-button" id="exercise1" onclick="showContent('Exercise 1')">Exercise 1</button>
+    <button class="exercise-button" id="exercise2" onclick="showContent('Exercise 2')">Exercise 2</button>
+    <button class="exercise-button" id="exercise3" onclick="showContent('Exercise 3')">Exercise 3</button>
+    <button class="exercise-button" id="exercise4" onclick="showContent('Exercise 4')">Exercise 4</button>
+    <button class="exercise-button" id="exercise5" onclick="showContent('Exercise 5')">Exercise 5</button>
+    <button class="exercise-button" id="exercise6" onclick="showContent('Exercise 6')">Exercise 6</button>
+    <button class="exercise-button" id="exercise7" onclick="showContent('Exercise 7')">Exercise 7</button>
+    <button class="exercise-button" id="exercise8" onclick="showContent('Exercise 8')">Exercise 8</button>
+    <button class="exercise-button" id="exercise9" onclick="showContent('Exercise 9')">Exercise 9</button>
+    <button class="exercise-button" id="exercise10" onclick="showContent('Exercise 10')">Exercise 10</button>
+  </div>
+
+  <div class="content-container" id="contentContainer">
+    <h1 id="exerciseTitle">Exercise Title</h1>
+    <p id="exerciseDescription">This is the Python exercise description.</p>
+
+    <div class="editor-container">
+      <div id="editor"></div>
+      <button class="run-button" id="run">Run</button>
+      <h2>Output:</h2>
+      <pre id="output"></pre>
+    </div>
+
+    <button class="return-button" onclick="hideContent()">Return</button>
+    <button class="finish-button" id="finishButton" onclick="finishExercise()">Finish</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+
+  <script src="https://unpkg.com/monaco-editor@0.33.0/min/vs/loader.js"></script>
+
+  <script src="/javarice/exercise.js"></script>
+</body>
+</html>

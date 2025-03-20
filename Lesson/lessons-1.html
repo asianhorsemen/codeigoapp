@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <title>Progress Bar Example</title>
+  <style>
+    /* Your existing CSS styles */
+    
+    /* Hide scrollbar for Chrome, Safari, and Opera */
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    body {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
+    html, body {
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh; /* Full viewport height */
+      background: url('/images/background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-y: scroll; /* Enable vertical scrolling */
+    }
+
+    .page {
+      display: none;
+      text-align: center;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .progress-container {
+      width: 100%;
+      margin: 20px auto;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      height: 10px;
+      position: fixed;
+      top: 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: rgba(90, 100, 255, 1);
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-text {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: rgba(90, 100, 255, 1);
+    }
+
+    button {
+      background-color: rgb(2, 2, 39);
+      border-radius: 10px;
+      border: 3px solid rgba(90, 100, 255, 1);
+      box-shadow: 0px 5px 0px rgba(90, 100, 255, 1);
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px;
+      height: 40px;
+      text-align: center;
+      padding: 1px;
+      width: 80%;
+      cursor: pointer;
+      transition: all 0.1s ease-in-out;
+    }
+
+    button:disabled {
+      background-color: rgba(90, 100, 255, 0.5);
+      cursor: not-allowed;
+    }
+
+    #page-1 img,
+    #page-2 img {
+      position: relative;
+      bottom: 200px;
+      border-radius: 10px;
+    }
+
+    #page-1 .next,
+    #page-2 .next {
+      position: fixed;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    p {
+      position: relative;
+      top: 50px;
+      text-align: center;
+      font-size: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      width: 300px;
+      margin: 0 auto;
+    }
+
+    #page-1 video,
+    #page-2 video {
+      position: fixed;
+      top: 490px;
+      left: -15px;
+      max-width: 140px;
+      border-radius: 10px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Styles for the question page */
+    #page-3 .question {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    #page-3 .options {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #page-3 .options button {
+      width: 60%;
+      font-size: 18px;
+    }
+
+    #page-3 .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: rgba(90, 100, 255, 1);
+    }
+
+    /* Styles for the success page */
+    #page-4 {
+      text-align: center;
+    }
+
+    #page-4 h1 {
+      font-size: 32px;
+      color: rgba(90, 100, 255, 1);
+    }
+
+    #page-4 p {
+      font-size: 18px;
+    }
+
+    /* Mobile Styles (Width ≤ 600px) */
+    @media (max-width: 600px) {
+      body {
+        justify-content: flex-start; /* Align content to the top */
+        padding-top: 20px; /* Add some padding at the top */
+      }
+
+      .progress-container {
+        width: 70%; /* Wider progress bar for mobile */
+        top: 0px; /* Adjust position */
+      }
+
+      #page-1 .img,
+      #page-2 .img {
+        width: 60%; /* Full width for the image */
+        height: auto; /* Maintain aspect ratio */
+        top: 10px; /* Remove relative positioning */
+        margin-top: 30px; /* Add some margin */
+        margin: 10px;
+      }
+
+      #page-1 .next {
+        width: 70%; /* Wider button for mobile */
+        margin: 20px auto; /* Center the button */
+        position: fixed; /* Keep button at the bottom */
+        bottom: 10px; /* Adjust position */
+        right: 100px; /* Center horizontally */
+      }
+      #page-2 .next {
+        width: 50%; /* Wider button for mobile */
+        margin: 20px auto; /* Center the button */
+        position: fixed; /* Keep button at the bottom */
+        bottom: 10px; /* Adjust position */
+        left: -10px; /* Center horizontally */
+      }
+
+      .page h1 {
+        font-size: 24px; /* Larger font size for headings */
+      }
+
+      .page p {
+        font-size: 16px; /* Larger font size for paragraphs */
+      }
+
+      button {
+        width: 90%; /* Wider buttons for mobile */
+        font-size: 18px; /* Larger font size for buttons */
+      }
+    }
+    a {
+        text-decoration: none;
+    }
+
+    .return {
+      position: fixed;
+      left:-10px;
+      bottom: 20px;
+      width: 20%;
+    }
+
+    /* Volume Button Styles */
+    .volume-button {
+      position: fixed;
+      bottom: 20px;
+      right: 0px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 24px;
+      width: 20%;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Volume Button -->
+  <button class="volume-button" onclick="toggleSound()">
+    <i data-lucide="volume-2"></i> <!-- Initial icon for sound on -->
+  </button>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <!-- Pages -->
+  <div class="page active" id="page-1">
+    <img class="img" src="/images/guido-van-rossum.jpg" alt="Guido van Rossum">
+    <video src="/video/robot.mp4" autoplay loop muted onpause="this.play()"
+      controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
+    <div class="container">
+      <p class="text">Python is a high-level programming language created by Guido van Rossum and first released in 1991. It was designed to be easy to read and write, emphasizing code readability and simplicity, making it a popular choice for both beginners and professionals.</p>
+      <button class="next" onclick="nextPage()">Next</button>
+    </div>
+  </div>
+
+  <div class="page" id="page-2">
+    <h1>Page 2</h1>
+    <img class="img" src="/images/python-frameworks-lesson-1.png" alt="">
+    <video src="/video/robot.mp4" autoplay loop muted onpause="this.play()"
+      controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
+    <p class="text">Python is a simple, versatile language used for web development, data analysis, and automation. Its easy syntax and powerful libraries like Django, Flask, Pandas, NumPy, TensorFlow, and Scikit-learn make it popular for beginners and professionals.</p>
+    <button class="return" onclick="previousPage()">
+      <i data-lucide="corner-up-left"></i>
+    </button>
+    <button class="next" onclick="nextPage()">Next</button>
+  </div>
+
+  <div class="page" id="page-3">
+    <h1>Page 3</h1>
+    <div class="question">What year was Python created?</div>
+    <div class="options">
+      <button onclick="checkAnswer(1989)">1989</button>
+      <button onclick="checkAnswer(1991)">1991</button>
+      <button onclick="checkAnswer(1995)">1995</button>
+      <button onclick="checkAnswer(2000)">2000</button>
+    </div>
+    <div class="result" id="result"></div>
+    <button class="return" onclick="previousPage()">
+      <i data-lucide="corner-up-left"></i>
+    </button>
+  </div>
+
+  <div class="page" id="page-4">
+    <h1>Success!</h1>
+    <button onclick="window.location.href='/navbar/homepage.html'">Go to Homepage</button>
+    <button class="return" onclick="previousPage()">Return</button>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let currentPage = 1;
+    const totalPages = 4; // Total number of pages
+    let isSoundOn = true; // Variable to track sound status (default is on)
+
+    // Function to update progress
+    function updateProgress() {
+      const progressFill = document.getElementById('progress-fill');
+      const progressPercentage = (currentPage / totalPages) * 100;
+      progressFill.style.width = `${progressPercentage}%`;
+    }
+
+    // Function to play a sound for the current page (only if sound is on)
+    function playPageSound() {
+      if (!isSoundOn) return; // Stop if sound is off
+
+      let soundFile = '';
+
+      switch (currentPage) {
+        case 1:
+          soundFile = 'voice-over/voice-over1.mp3';
+          break;
+        case 2:
+          soundFile = 'voice-over/voice-over#2.mp3';
+          break;
+        case 3:
+          soundFile = 'sound/page3.mp3';
+          break;
+        case 4:
+          soundFile = 'sound/page4.mp3';
+          break;
+      }
+
+      if (soundFile) {
+        const audio = new Audio(soundFile);
+        audio.play();
+      }
+    }
+
+    // Function to toggle sound (volume button)
+    function toggleSound() {
+      isSoundOn = !isSoundOn; // Toggle the sound status
+      const volumeButtonIcon = document.querySelector('.volume-button i');
+
+      // Change icon based on sound status
+      if (isSoundOn) {
+        volumeButtonIcon.setAttribute('data-lucide', 'volume-2');
+        playPageSound(); // Play sound when toggling sound on
+      } else {
+        volumeButtonIcon.setAttribute('data-lucide', 'volume-x');
+      }
+
+      // Update the Lucide icon
+      lucide.createIcons();
+    }
+
+    // Function to go to the next page
+    function nextPage() {
+      if (currentPage < totalPages) {
+        document.getElementById(`page-${currentPage}`).classList.remove('active');
+        currentPage++;
+        document.getElementById(`page-${currentPage}`).classList.add('active');
+        updateProgress();
+      }
+    }
+
+    // Function to go to the previous page
+    function previousPage() {
+      if (currentPage > 1) {
+        document.getElementById(`page-${currentPage}`).classList.remove('active');
+        currentPage--;
+        document.getElementById(`page-${currentPage}`).classList.add('active');
+        updateProgress();
+      }
+    }
+
+    // Function to check the answer
+    function checkAnswer(year) {
+      const resultDiv = document.getElementById('result');
+      if (year === 1991) {
+        resultDiv.innerText = "Correct! Python was created in 1991.";
+        resultDiv.style.color = "green";
+        setTimeout(() => {
+          nextPage(); // Go to the next page (page-4)
+        }, 1000);
+      } else {
+        resultDiv.innerText = "Incorrect. Resetting to the first page...";
+        resultDiv.style.color = "red";
+        setTimeout(() => {
+          resetToFirstPage();
+        }, 1000);
+      }
+    }
+
+    // Function to reset to the first page
+    function resetToFirstPage() {
+      document.getElementById(`page-${currentPage}`).classList.remove('active');
+      currentPage = 1;
+      document.getElementById(`page-${currentPage}`).classList.add('active');
+      updateProgress();
+    }
+
+    // Initialize progress
+    updateProgress();
+  </script>
+</body>
+</html>

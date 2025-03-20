@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/manifest.json">
+  <title>Cool Mobile Login with Firebase</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: rgba(1, 1, 27, 1);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .login-container {
+      position: fixed;
+      top: 250px;
+      border-radius: 20px;
+      padding: 30px;
+      width: 85%;
+      max-width: 350px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 6px 0;
+      border: none;
+      border-bottom: 2px solid rgb(255, 255, 255);
+      background: transparent;
+      color: white;
+      font-size: 16px;
+      outline: none;
+      transition: border-bottom 0.3s ease;
+    }
+
+    .input-group input:focus {
+      border-bottom: 2px solid #6a11cb;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: -10px;
+      font-size: 12px;
+      color: #ffffff;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .signup-link {
+      margin-top: 15px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .signup-link a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .signup-link a:hover {
+      color: #6a11cb;
+    }
+
+    /* Hide Sign Up Form Initially */
+    #signupForm {
+      display: none;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .btn {
+        font-size: 14px;
+      }
+
+      .signup-link {
+        font-size: 12px;
+      }
+    }
+
+    img {
+      width: 90%;
+      position: absolute;
+      top: -10px;
+    }
+  </style>
+</head>
+<body>
+  <img src="/images/codeigo-logo.png" alt="">
+  <div class="login-container">
+    <!-- Login Form -->
+    <div id="loginForm">
+      <h1>Codeigo</h1>
+      <div class="input-group">
+        <input type="email" id="Email" placeholder=" " required />
+        <label for="Email">Email</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder=" " required />
+        <label for="password">Password</label>
+      </div>
+      <button id="submit" class="btn">Login</button>
+      <div class="signup-link">
+        <p>Don't have an account? <a href="javascript:void(0);" id="showSignup">Sign Up</a></p>
+      </div>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="signupForm">
+      <h1>Sign Up</h1>
+      <div class="input-group">
+        <input type="email" id="signupEmail" placeholder=" " required />
+        <label for="signupEmail">Email</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="signupPassword" placeholder=" " required />
+        <label for="signupPassword">Password</label>
+      </div>
+      <button id="signupBtn" class="btn">Sign Up</button>
+      <div class="signup-link">
+        <p>Already have an account? <a href="javascript:void(0);" id="showLogin">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase services
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+
+    // Your Firebase config
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBXxaDjPCID1Zrha2t-JjKrPR9A5bF8MVc",
+  authDomain: "codeigo-application.firebaseapp.com",
+  projectId: "codeigo-application",
+  storageBucket: "codeigo-application.firebasestorage.app",
+  messagingSenderId: "866142616520",
+  appId: "1:866142616520:web:c91f4cf5c2cdf8db94defd",
+  measurementId: "G-F06YJRKQKZ"
+};
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Login function
+    document.getElementById("submit").addEventListener("click", function () {
+      const email = document.getElementById("Email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Login successful!");
+          window.location.href = "/introduction.html"; // Redirect after login
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
+    });
+
+    // Sign Up function
+    document.getElementById("signupBtn").addEventListener("click", function () {
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Sign Up successful!");
+          window.location.href = "/introduction.html"; // Redirect after Sign Up
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
+    });
+
+    // Toggle between Login and Sign Up forms
+    document.getElementById("showSignup").addEventListener("click", function () {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("signupForm").style.display = "block";
+    });
+
+    document.getElementById("showLogin").addEventListener("click", function () {
+      document.getElementById("signupForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+    });
+
+    if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+        .then(() => console.log("Service Worker Registered"))
+        .catch((error) => console.log("Service Worker Registration Failed", error));
+}
+
+  </script>
+</body>
+</html>
