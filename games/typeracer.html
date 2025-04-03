@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=600, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Code Typing Race</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,8 @@
         
         body {
             font-family: 'Source Code Pro', monospace;
-            width: 600px;
+            width: 100%;
+            max-width: 600px;
             margin: 0 auto;
             padding: 15px;
             background-color: rgba(1, 1, 27, 1);
@@ -77,7 +78,7 @@
             background-color: rgba(30, 30, 50, 0.7);
             color: white;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-            font-size: 14px;
+            font-size: 16px; /* Increased for better mobile readability */
         }
         
         .input-area:focus {
@@ -109,7 +110,7 @@
             background-color: rgba(76, 175, 80, 0.8);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
@@ -187,7 +188,7 @@
             margin-bottom: 15px;
             border-left: 4px solid rgba(100, 149, 237, 0.7);
             box-shadow: 0 0 12px rgba(0,0,0,0.2);
-            font-size: 13px;
+            font-size: 14px;
         }
         
         .controls {
@@ -216,9 +217,8 @@
         }
         
         /* Mobile-specific adjustments */
-        @media (width: 600px) {
+        @media (max-width: 600px) {
             body {
-                width: 100%;
                 padding: 10px;
             }
             
@@ -229,33 +229,35 @@
             .code-display {
                 font-size: 13px;
                 padding: 10px;
+                line-height: 1.3;
             }
             
             .input-area {
                 height: 100px;
-                font-size: 13px;
+                font-size: 14px;
             }
             
             .stat-box {
                 min-width: calc(50% - 6px);
                 font-size: 12px;
+                padding: 8px 10px;
             }
             
             button {
                 min-width: calc(50% - 6px);
-                font-size: 13px;
-                padding: 8px 12px;
+                font-size: 14px;
+                padding: 10px 12px;
             }
             
             .title {
                 font-size: 20px;
                 margin-bottom: 15px;
             }
-        }
-        
-        /* Prevent zooming on mobile */
-        input, textarea {
-            font-size: 16px !important;
+            
+            .instructions {
+                font-size: 13px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -703,11 +705,6 @@ squared = [n**2 for n in numbers]`,
                 window.pJSDom[0].pJS.fn.vendors.resize();
             }
         });
-
-        // Prevent zooming on mobile
-        document.addEventListener('touchmove', function(e) {
-            if (e.scale !== 1) { e.preventDefault(); }
-        }, { passive: false });
 
         // Focus the input area when tapping anywhere on the game container
         document.querySelector('.game-container').addEventListener('touchend', function() {
