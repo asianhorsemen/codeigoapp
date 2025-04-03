@@ -1,0 +1,535 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Codeigo</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: rgba(1, 1, 27, 1);
+        color: white;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      .particle {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+      }
+
+      .container {
+        position: relative;
+        top: 100px;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+      }
+
+      
+
+      #page-2 {
+        display: none;
+        color: white;
+        z-index: 1;
+      }
+
+      .logo {
+        width: 100%;
+        margin-bottom: 30px;
+        animation: fadeIn 1s ease-in-out;
+        position: absolute;
+        top: 60px;
+      }
+
+      .text {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      .small-text {
+        font-size: 16px;
+        opacity: 0.8;
+        margin-bottom: 40px;
+        animation: fadeIn 2s ease-in-out;
+      }
+
+      .start-button {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeIn 2.5s ease-in-out;
+      }
+
+      .start-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Hide first page and show second page */
+      .hidden {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
+      }
+
+      /* Fade-in effect for page 2 */
+      .visible {
+        display: flex !important;
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+      }
+
+      /* COURSE PREVIEW STYLES (Added for Page 2) */
+      .course-preview {
+        position: absolute;
+        width: 120px;
+        height: 50px;
+        background: rgba(30, 20, 70, 0.6);
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(106, 17, 203, 0.3);
+        padding: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        z-index: -1;
+        transition: all 0.5s ease;
+        overflow: hidden;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .course-preview::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+      }
+
+      .course-preview h4 {
+        font-size: 12px;
+        margin-bottom: 8px;
+        color: #2575fc;
+      }
+
+      .course-preview p {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+      }
+
+      .course-preview:hover {
+        transform: scale(1.05) translateY(-5px);
+        box-shadow: 0 15px 30px rgba(106, 17, 203, 0.4);
+      }
+
+      /* Page 2 Login Container */
+      #page-2 .login-container {
+        position: fixed;
+        top: 400px;
+        border-radius: 20px;
+        padding: 30px;
+        width: 75%;
+        max-width: 350px;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+        background: rgba(15, 15, 35, 0.7);
+        border: 1px solid rgba(106, 17, 203, 0.2);
+        z-index: 10;
+      }
+
+      #page-2 .signup-container {
+        position: relative;
+      }
+
+      #page-2 h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      .input-group {
+        position: relative;
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 6px 0;
+        border: none;
+        border-bottom: 2px solid rgb(255, 255, 255);
+        background: transparent;
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: border-bottom 0.3s ease;
+      }
+
+      .input-group input:focus {
+        border-bottom: 2px solid #6a11cb;
+      }
+
+      .input-group label {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.5);
+        pointer-events: none;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus+label,
+      .input-group input:not(:placeholder-shown)+label {
+        top: -10px;
+        font-size: 12px;
+        color: #ffffff;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .signup-link {
+        margin-top: 15px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .signup-link a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+      }
+
+      .signup-link a:hover {
+        color: #6a11cb;
+      }
+
+      /* Hide Sign Up Form Initially */
+      #signupForm {
+        display: none;
+      }
+
+      .selected-text {
+        position: fixed;
+        top: 200px;
+        left: 40px;
+        color: white;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .typed-out {
+        position: relative;
+        overflow: hidden;
+        border-right: .15em solid orange;
+        white-space: nowrap;
+        animation: typing 1s forwards;
+        font-size: 1.6rem;
+        width: 0;
+        color: white;
+        z-index: 999;
+        bottom: 100px;
+      }
+
+      @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+      }
+
+      .logo.move-up {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        transition: top 0.8s ease-in-out, width 0.8s ease-in-out;
+      }
+
+      @media (max-width: 480px) {
+        .login-container {
+          padding: 20px;
+        }
+        h1 {
+          font-size: 20px;
+        }
+        .btn {
+          font-size: 14px;
+        }
+        .signup-link {
+          font-size: 12px;
+        }
+        .course-preview {
+          width: 100px;
+          height: 140px;
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Logo outside of pages -->
+    <img src="images/codeigo-logo.png" alt="Codeigo Logo" class="logo">
+
+    <!-- Page 1: Welcome Screen -->
+    <div class="container" id="page-1">
+      <!-- Course Preview Cards -->
+      <div class="course-preview" style="bottom: 44%; left: 5%;">
+        <h4>Python Basics</h4>
+        <p>Start coding today</p>
+      </div>
+      
+      <div class="course-preview" style="top: 62%; left: 5%;">
+        <h4>Web Dev</h4>
+        <p>Build websites</p>
+      </div>
+      
+      <div class="course-preview" style="top: 31%; right: 8%;">
+        <h4>Data Science</h4>
+        <p>Analyze data</p>
+      </div>
+      
+      <div class="course-preview" style="top: 67%; right: 1%;">
+        <h4>Machine Learning</h4>
+        <p>AI fundamentals</p>
+      </div>
+      <div class="text">Welcome to Codeigo</div>
+      <div class="small-text">Your journey to coding mastery starts here</div>
+      <button class="start-button" id="startButton">Get Started</button>
+    </div>
+
+    <!-- Page 2: Login/Signup with Course Previews -->
+    <div class="container" id="page-2">
+      
+      
+        <div class="typed-out" id="text-1">Welcome to Codeigo</div>
+      <div class="login-container">
+        <!-- Login Form -->
+
+        <div id="loginForm">
+          
+          <div class="input-group">
+            <input type="email" id="Email" placeholder=" " required />
+            <label for="Email">Email</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="password" placeholder=" " required />
+            <label for="password">Password</label>
+          </div>
+          <button id="submit" class="btn">Login</button>
+          <div class="signup-link">
+            <p>Don't have an account? <a href="javascript:void(0);" id="showSignup">Sign Up</a></p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Signup Form -->
+
+        <div id="signupForm">
+          <div class="input-group">
+            <input type="email" id="signupEmail" placeholder=" " required />
+            <label for="signupEmail">Email</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="signupPassword" placeholder=" " required />
+            <label for="signupPassword">Password</label>
+          </div>
+          <button id="signupBtn" class="btn">Sign Up</button>
+          <div class="signup-link">
+            <p>Already have an account? <a href="javascript:void(0);" id="showLogin">Login</a></p>
+          </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+      
+      // Create particle effect
+      function createParticles() {
+        const container = document.getElementById('particles');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+
+          const size = Math.random() * 5 + 2;
+          const posX = Math.random() * 100;
+          const posY = Math.random() * 100;
+          const delay = Math.random() * 5;
+          const duration = Math.random() * 10 + 10;
+
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.left = `${posX}%`;
+          particle.style.top = `${posY}%`;
+          particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+
+          container.appendChild(particle);
+        }
+      }
+
+      // Add floating animation
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
+            opacity: 0.5;
+          }
+          50% {
+            transform: translateY(-20px) translateX(10px);
+            opacity: 0.8;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Initialize particles
+      createParticles();
+
+      // Button click handler
+      document.getElementById('startButton').addEventListener('click', function() {
+        // Move the logo up
+        document.querySelector('.logo').classList.add('move-up');
+
+        // Fade out the first page elements
+        document.querySelector('.text').classList.add('hidden');
+        document.querySelector('.small-text').classList.add('hidden');
+        document.querySelector('.start-button').classList.add('hidden');
+
+        // Wait for the transition before displaying the next page
+        setTimeout(() => {
+          document.getElementById('page-1').style.display = "none";
+          document.getElementById('page-2').style.display = "flex";
+        }, 800);
+      });
+
+      // Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBXxaDjPCID1Zrha2t-JjKrPR9A5bF8MVc",
+    authDomain: "codeigo-application.firebaseapp.com",
+    projectId: "codeigo-application",
+    storageBucket: "codeigo-application.firebasestorage.app",
+    messagingSenderId: "866142616520",
+    appId: "1:866142616520:web:c91f4cf5c2cdf8db94defd",
+    measurementId: "G-F06YJRKQKZ"
+  };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // Login function
+      document.getElementById('submit').addEventListener('click', function() {
+        const email = document.getElementById('Email').value;
+        const password = document.getElementById('password').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log('Login successful:', user);
+          })
+          .catch((error) => {
+            console.error('Error logging in:', error);
+            alert('Invalid credentials. Please try again.');
+          });
+      });
+
+      // Sign Up function
+      document.getElementById("signupBtn").addEventListener("click", function() {
+        const email = document.getElementById("signupEmail").value;
+        const password = document.getElementById("signupPassword").value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            window.location.href = "introduction.html";
+          })
+          .catch((error) => {
+            alert("Error: " + error.message);
+          });
+      });
+
+      // Toggle between Login and Sign Up forms
+      document.getElementById("showSignup").addEventListener("click", function() {
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("signupForm").style.display = "block";
+      });
+
+      document.getElementById("showLogin").addEventListener("click", function() {
+        document.getElementById("signupForm").style.display = "none";
+        document.getElementById("loginForm").style.display = "block";
+      });
+    </script>
+  </body>
+  </html>

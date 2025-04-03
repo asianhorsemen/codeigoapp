@@ -431,13 +431,13 @@
     }
 
     function selectOption(option, pageNumber) {
-      const selectedText = document.getElementById('selectedText' + pageNumber);
-      selectedText.innerText = `Selected: ${option}`;
+// Delay of 0ms to ensure the text is updated after the button click
 
-      setTimeout(() => {
-        nextPage(pageNumber + 1);
-      }, 1000);
-    }
+  setTimeout(() => {
+    nextPage(pageNumber + 1);
+  },);
+}
+
 
     function fillSlot(slotNumber, text, buttonElement) {
       let slot = document.getElementById('slot' + slotNumber);

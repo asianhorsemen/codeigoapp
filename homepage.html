@@ -1,83 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bottom to Top Scroll</title>
+  <title>Interactive Learning Path</title>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <style>
-        html,
-    body {
-      overflow-x: hidden;
-    }
-
-    body {
-      overflow-y: hidden;
-      font-family: Arial, sans-serif;
+    html, body {
       margin: 0;
       padding: 0;
-      height: 1600px;
-      background-color: rgba(1, 1, 27, 1);
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, rgba(1, 1, 27, 1) 0%, #0a0a2a 100%);
+      color: rgba(255, 255, 255, 0.9);
     }
 
+    /* Header Styles */
     .sticky {
       position: fixed;
       width: 100%;
       top: 0;
       z-index: 300;
-      height: 140px;
-    }
-
-    .blur-background {
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(10px);
-      background-color: rgba(1, 1, 27, 0.5);
+      height: 100px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(20px);
+      background-color: rgba(1, 1, 27, 0.7);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
     }
 
     .homepage-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px;
-      padding-bottom: 93px;
+      padding: 15px 20px;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 15px;
     }
 
     .homepage-header img {
-      height: 60px;
-      width: 60px;
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(90, 100, 255, 1);
+      transition: transform 0.3s ease;
+    }
+
+    .homepage-header img:hover {
+      transform: scale(1.1);
     }
 
     .homepage-header h1 {
       margin: 0;
-      font-size: 18px;
-      color: white;
+      font-size: 1.3rem;
+      font-weight: 600;
+      background: linear-gradient(to right, #fff, #aab6ff);
+      background-clip: text;
+      color: transparent;
     }
 
     /* Profile Icon */
     .profile-icon {
       cursor: pointer;
-      margin-right: 15px;
+      margin-right: 10px;
       color: white;
+      transition: transform 0.3s ease;
     }
 
-    /* Navigation Bar (Moved to Bottom) */
+    .profile-icon:hover {
+      transform: scale(1.2);
+      color: rgba(90, 100, 255, 1);
+    }
+
+    /* Main Content */
+    #content {
+      margin-top: 100px;
+      margin-bottom: 80px;
+      width: 100%;
+      height: calc(100vh - 180px);
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    /* Progress Tracking */
+    .progress-container {
+      position: fixed;
+      display: flex;
+      align-items: center;
+      width:85%;
+      max-width: 400px;
+      margin: 40px auto;
+      position: relative;
+    }
+
+    .final {
+      position: relative;
+      left: 240px;
+    }
+
+    .circle {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 6;
+      color: white;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .circle.active {
+      background-color: rgba(90, 100, 255, 1);
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(90, 100, 255, 0.5);
+    }
+
+    .circle.completed {
+      background-color: rgba(90, 100, 255, 1);
+      animation: pulse 2s infinite;
+    }
+
+    .progress-line {
+      width: 100%;
+      height: 6px;
+      background-color: rgba(255, 255, 255, 0.1);
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 4;
+      border-radius: 3px;
+    }
+
+    .progress-fill {
+      height: 6px;
+      width: 0%;
+      background: linear-gradient(to right, rgba(90, 100, 255, 1), #6a5acd);
+      position: absolute;
+      left: 0;
+      z-index: 5;
+      transition: width 0.5s ease, background 0.5s ease;
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(90, 100, 255, 0.5);
+    }
+
+    /* Lesson Buttons */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      padding: 20px;
+      min-height: 100%;
+      justify-content: flex-end;
+      margin-bottom: 50px;
+    }
+
+    .button {
+      position: relative;
+      background-color: rgba(2, 2, 39, 1);
+      border-radius: 15px;
+      border: 2px solid rgba(90, 100, 255, 1);
+      box-shadow: 0 5px 0 rgba(90, 100, 255, 0.5);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      height: 70px;
+      text-align: center;
+      padding: 0 25px;
+      width: 90%;
+      max-width: 350px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      overflow: hidden;
+    }
+
+    .button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: 0.5s;
+    }
+
+    .button:hover::before {
+      left: 100%;
+    }
+
+    .button:disabled {
+      background-color: rgba(2, 2, 39, 0.5);
+      box-shadow: 0 2px 0 rgba(18, 23, 95, 0.3);
+      border: 2px solid rgba(34, 40, 126, 0.5);
+      transform: translateY(3px);
+      color: rgba(255, 255, 255, 0.5);
+      cursor: not-allowed;
+    }
+
+    .button:active:not(:disabled) {
+      box-shadow: 0 2px 0 rgba(90, 100, 255, 0.5);
+      transform: translateY(5px);
+    }
+
+    .button.active {
+      animation: buttonBounce 0.5s ease;
+    }
+
+    /* Navigation Bar */
     .navbar {
       position: fixed;
       bottom: 0;
       width: 100%;
       display: flex;
       justify-content: space-around;
-      background-color: rgb(38, 38, 150);
-      padding: 10px 0;
-      gap: 10px;
-      border-radius: 20px 20px 0 0;
+      background-color: rgba(1, 1, 27, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 12px 0;
+      gap: 5px;
+      z-index: 1000;
+      border-top: 1px solid rgba(90, 100, 255, 0.2);
     }
 
     .navbar a {
@@ -85,420 +240,526 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: white;
+      color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
       cursor: pointer;
-      padding: 10px;
-      border-radius: 50%;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .navbar a.active {
-      height: 30px;
-      background-color: rgba(1, 1, 27, 1);
-      transform: translateY(-20px) scale(1.2);
-    }
-
-    .navbar a.active svg {
-      color: white;
-      transform: scale(1.2);
-    }
-
-    .navbar a.active span {
-      color: rgba(1, 1, 27, 1);
-    }
-
-    /* Animation for the active icon */
-    @keyframes iconBounce {
-      0% {
-        transform: translateY(0) scale(1);
-      }
-
-      50% {
-        transform: translateY(-10px) scale(1.2);
-      }
-
-      100% {
-        transform: translateY(-20px) scale(1.2);
-      }
-    }
-
-    .navbar a.active {
-      animation: iconBounce 0.5s ease-in-out;
-    }
-
-    .section {
-      display: none;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .active-section {
-      display: block;
-    }
-
-    #content {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      height: 300vh;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      gap: 50px;
-      margin-top: 10px;
-      align-items: center;
-      margin-bottom: 200px;
-      height: 2000px;
-    }
-
-    .button {
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
       position: relative;
-      top: 0px;
-      background-color: rgb(2, 2, 39);
-      border-radius: 20px;
-      border: 3px solid rgba(90, 100, 255, 1);
-      box-shadow: 0px 5px 0px rgba(90, 100, 255, 1);
-      color: white;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 20px;
-      font-weight: bold;
-      margin: 10px;
-      height: 60px;
-      text-align: center;
-      padding: 15px;
-      width: 80%;
-      cursor: pointer;
-      transition: all 0.1s ease-in-out;
+      overflow: hidden;
     }
 
-    .button:disabled {
-      background-color: rgb(2, 2, 39);
-      box-shadow: 0px 2px 0px rgba(18, 23, 95, 1);
-      border: 3px solid rgba(34, 40, 126, 1);
-      transform: translateY(10px);
-    }
-
-    .button:active:not(:disabled) {
-      background-color: rgb(2, 2, 39);
-      box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
-      transform: translateY(10px);
-    }
-
-    .progress-container {
-      display: flex;
-      align-items: center;
+    .navbar a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 320px;
-      margin-bottom: 0px;
-      position: fixed;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(90, 100, 255, 0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .navbar a:hover::before {
+      opacity: 1;
+    }
+
+    .navbar a.active {
+      color: white;
+      background: rgba(90, 100, 255, 0.2);
+      transform: translateY(-10px);
+    }
+
+    .navbar a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
       left: 50%;
       transform: translateX(-50%);
-      top: 5px;
-      z-index: 1000;
+      width: 5px;
+      height: 5px;
+      background-color: rgba(90, 100, 255, 1);
+      border-radius: 50%;
     }
 
-    .circle {
-      width: 30px;
-      height: 30px;
-      background-color: blue;
+    .navbar a i {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar a.active i {
+      transform: scale(1.2);
+      color: rgba(90, 100, 255, 1);
+    }
+
+    .navbar a span {
+      font-size: 0.7rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(90, 100, 255, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(90, 100, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(90, 100, 255, 0); }
+    }
+
+    @keyframes buttonBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Particles */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* Scrollbar styling */
+    #content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #content::-webkit-scrollbar-track {
+      background: rgba(1, 1, 27, 0.5);
+    }
+
+    #content::-webkit-scrollbar-thumb {
+      background-color: rgba(90, 100, 255, 1);
+      border-radius: 4px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .homepage-header h1 {
+        font-size: 1.1rem;
+      }
+
+      .homepage-header img {
+        height: 40px;
+        width: 40px;
+      }
+
+      .button {
+        font-size: 1rem;
+        height: 65px;
+        padding: 0 15px;
+      }
+
+      .navbar a {
+        padding: 5px 8px;
+      }
+
+      .navbar a i {
+        font-size: 1.2rem;
+      }
+
+      .navbar a span {
+        font-size: 0.6rem;
+      }
+    }
+
+    /* Scroll to top button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 50px;
+      height: 80px;
+      background-color: rgba(90, 100, 255, 1);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      z-index: 6;
-      top: 70px;
       color: white;
+      cursor: pointer;
+      z-index: 999;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      opacity: 0;
+      visibility: hidden;
     }
 
-    .start {
-      right: 20px;
+    .scroll-to-top.visible {
+      opacity: 1;
+      visibility: visible;
     }
 
-    .circle.final {
-      position: absolute;
-      top: 70px;
-      right: -15px;
-      background-color: blue;
-    }
-
-    .progress-line {
-      width: 100%;
-      height: 5px;
-      background-color: white;
-      position: absolute;
-      top: 85px;
-      left: 0;
-      right: 0;
-      z-index: 4;
-    }
-
-    .progress-fill {
-      height: 5px;
-      width: 0%;
-      background-color: blue;
-      position: absolute;
-      top: 85px;
-      left: 0;
-      z-index: 5;
-      transition: width 0.3s ease;
-      border-radius: 20px;
-    }
-
-    a {
-      text-decoration: none;
-      color: white;
-    }
-
-    .container img {
-      height: 200px;
-      position: relative;
-      left: 100px;
-      top: 475px;
-      width: 250px;
-    }
-
-    .container .img-final {
-      position: absolute;
-      left: 60px;
-      top: 700px;
-    }
-
-    #img2 {
-      position: absolute;
-      top: 1040px;
-      left: 0;
-      width:60%;
-      height: auto;
-    }
-
-    #svg-1-line {
-      position: absolute;
-      top: 400px;
-      z-index: -1;
-    }
-
-    #button-1 {
-      position: relative;
-      top: 1370px;
-      left: 0px;
-    }
-
-    #button-2 {
-      position: relative;
-      top: 1100px;
-      right: 80px;
-    }
-
-    #button-3 {
-      position: relative;
-      top: 830px;
-      left: 0px;
-    }
-
-    #button-4 {
-      position: relative;
-      top: 580px;
-      left: 100px;
-    }
-
-    #button-5 {
-      position: relative;
-      top: 300px;
-      left: 0px;
-    }
-
-    @media (max-width: 600px) {
-      .button {
-        font-size: 16px;
-        height: 75px;
-        padding: 10px;
-        width: 40%;
-      }
-
-      .navbar {
-        gap: 5px;
-      }
-
-      .navbar svg {
-        width: 28px;
-        height: 28px;
-      }
-
-      .navbar span {
-        font-size: 10px;
-      }
-
-      .progress-container {
-        width: 270px;
-      }
-
-      .circle {
-        width: 40px;
-        height: 40px;
-      }
-
-      .progress-line,
-      .progress-fill {
-        height: 7px;
-      }
+    .scroll-to-top:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(90, 100, 255, 0.5);
     }
   </style>
-  
 </head>
 
 <body>
-  <div class="sticky blur-background">
+  <!-- Particles Background -->
+  <div class="particles-container" id="particles-js"></div>
+
+  <!-- Scroll to top button -->
+  <div class="scroll-to-top" id="scrollToTop">
+    <i data-lucide="arrow-up"></i>
+  </div>
+
+  <!-- Header -->
+  <div class="sticky">
     <div class="homepage-header">
       <div class="header-left">
-        <img src="images/codeigo-logo.png"  alt="Logo">
-        <h1>CODEIGO</h1>
+        <img src="images/codeigo-logo.png" alt="CodeIgo Logo">
+        <h1>CODEIGO LEARNING PATH</h1>
       </div>
       <i data-lucide="user" class="profile-icon"></i>
     </div>
+    <div class="progress-container">
+          <div class="circle start active">
+            <i data-lucide="graduation-cap" class="icon"></i>
+          </div>
+          <div class="progress-line"></div>
+          <div class="progress-fill" id="progress-fill"></div>
+          <div class="circle final">
+            <i data-lucide="crown" class="icon"></i>
+          </div>
+        </div>
   </div>
 
+  <!-- Main Content -->
   <div id="content">
     <div id="home" class="section active-section">
-      <div class="progress-container">
-        <div class="circle start">
-          <i data-lucide="graduation-cap" class="icon"></i>
-        </div>
-        <div class="progress-line"></div>
-        <div class="progress-fill" id="progress-fill"></div>
-        <div class="circle final">
-          <i data-lucide="crown" class="icon"></i>
-        </div>
-      </div>
       <div class="container">
-        <img class="img-final" src="images/graduation-cap.png" alt="">
-        <button class="button" id="button-1" onclick="redirectToPage('Lesson/lessons-1.html')">1</button>
-        <button class="button" id="button-2" onclick="redirectToPage('/lesson/lessons-2.html')" disabled>2</button>
-        <button class="button" id="button-3" onclick="redirectToPage('lessons-3.html')" disabled>3</button>
-        <button class="button" id="button-4" onclick="redirectToPage('lessons-4.html')" disabled>4</button>
-        <button class="button" id="button-5" onclick="redirectToPage('lessons-5.html')" disabled>5</button>
-        <img class="img" src="images/homepage1.png" alt="">
-        <img class="img" id="img2" src="images/homepage.png" alt="">
+        
+                
+        <button class="button animate__animated animate__fadeInUp" id="button-5" onclick="redirectToLesson('lessons-5.html')" disabled>
+          Final Project
+        </button>
+        
+        <button class="button animate__animated animate__fadeInUp" id="button-4" onclick="redirectToLesson('lessons-4.html')" disabled>
+          Functions and Modules
+        </button>
+        
+        <button class="button animate__animated animate__fadeInUp" id="button-3" onclick="redirectToLesson('lessons-3.html')" disabled>
+          Control Structures
+        </button>
+        
+        <button class="button animate__animated animate__fadeInUp" id="button-2" onclick="redirectToLesson('/lesson/lessons-2.html')" disabled>
+          Variables and Data Types
+        </button>
+        
+        <button class="button animate__animated animate__fadeInUp" id="button-1" onclick="redirectToLesson('Lesson/lessons-1.html')">
+          Python basics
+        </button>
       </div>
     </div>
   </div>
 
-
   <!-- Navigation Bar -->
   <div class="navbar">
-    <a class="active" onclick="showSection('home')"><i data-lucide="home"></i> <span>Home</span></a>
-    <a href="navbar/video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
-    <a href="navbar/interpreter.html" onclick="showSection('compiler')"><i data-lucide="code"></i> <span>Compiler</span></a>
-    <a href="navbar/games.html" onclick="showSection('games')"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
-    <a href="navbar/exercise.html" onclick="showSection('exercise')"><i data-lucide="book-open"></i>
-      <span>Exercise</span></a>
+    <a class="active" onclick="showSection('home')">
+      <i data-lucide="home"></i>
+      <span>Home</span>
+    </a>
+    <a href="navbar/video-lesson.html">
+      <i data-lucide="play-circle"></i>
+      <span>Video</span>
+    </a>
+    <a href="navbar/interpreter.html">
+      <i data-lucide="code"></i>
+      <span>Compiler</span>
+    </a>
+    <a href="navbar/games.html">
+      <i data-lucide="gamepad-2"></i>
+      <span>Games</span>
+    </a>
+    <a href="navbar/exercise.html">
+      <i data-lucide="book-open"></i>
+      <span>Exercise</span>
+    </a>
   </div>
 
   <script>
-        lucide.createIcons();
+    // Initialize Lucide icons
+    lucide.createIcons();
 
-let progress = 0;
+    // Initialize variables
+    let progress = 0;
+    let currentActiveButton = 1;
+    const totalButtons = 5;
 
-window.onload = function () {
-  window.scrollTo(0, document.body.scrollHeight);
+    // On page load
+    window.onload = function() {
+      // Initialize particles
+      initParticles();
+      
+      // Check localStorage for completed lessons
+      checkCompletedLessons();
+      
+      // Set up scroll to top button
+      const scrollToTopBtn = document.getElementById('scrollToTop');
+      scrollToTopBtn.addEventListener('click', () => {
+        document.getElementById('content').scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+      
+      // Set up scroll event listener
+      const content = document.getElementById('content');
+      content.addEventListener('scroll', function() {
+        // Show/hide scroll to top button
+        if (content.scrollTop > 200) {
+          scrollToTopBtn.classList.add('visible');
+        } else {
+          scrollToTopBtn.classList.remove('visible');
+        }
+      });
+      
+      // Start at the bottom (buttons)
+      setTimeout(() => {
+        content.scrollTop = content.scrollHeight;
+      }, 50);
+    };
 
-  showSection('home');
+    // Check which lessons are completed from localStorage
+    function checkCompletedLessons() {
+      for (let i = 2; i <= totalButtons; i++) {
+        const isCompleted = localStorage.getItem(`lesson${i-1}Completed`);
+        if (isCompleted === 'true') {
+          unlockNext(i, (i-1) * 20);
+        }
+      }
+    }
 
-  document.getElementById("button-2").disabled = true;
-  document.getElementById("button-3").disabled = true;
-  document.getElementById("button-4").disabled = true;
-  document.getElementById("button-5").disabled = true;
+    // Unlock the next lesson
+    function unlockNext(nextId, progressAmount) {
+      const nextButton = document.getElementById(`button-${nextId}`);
+      if (nextButton) {
+        nextButton.disabled = false;
+        nextButton.classList.add('animate__pulse');
+        nextButton.style.boxShadow = '0 5px 0 rgba(90, 100, 255, 0.8), 0 0 20px rgba(90, 100, 255, 0.6)';
+        localStorage.setItem(`lesson${nextId-1}Completed`, 'true');
+      }
 
-  const button2State = localStorage.getItem('button2Enabled');
-  const button3State = localStorage.getItem('button3Enabled');
-  const button4State = localStorage.getItem('button4Enabled');
-  const button5State = localStorage.getItem('button5Enabled');
+      if (progress < progressAmount) {
+        progress = progressAmount;
+        document.getElementById("progress-fill").style.width = `${progress}%`;
+        updateProgressCircles();
+      }
 
-  if (button2State === 'true') {
-    document.getElementById("button-2").disabled = false; 
-  }
+      if (progress === 100) {
+        document.querySelector(".final").classList.add('completed');
+        createConfettiEffect();
+      }
+    }
 
-  if (button3State === 'true') {
-    document.getElementById("button-3").disabled = false; 
-  }
+    // Update progress circles
+    function updateProgressCircles() {
+      const circles = document.querySelectorAll('.circle');
+      circles.forEach((circle, index) => {
+        const circleProgress = (index / (circles.length - 1)) * 100;
+        if (circleProgress <= progress) {
+          circle.classList.add('active');
+        } else {
+          circle.classList.remove('active');
+        }
+      });
+    }
 
-  if (button4State === 'true') {
-    document.getElementById("button-4").disabled = false;
-  }
+    // Redirect to lesson page
+    function redirectToLesson(lessonUrl) {
+      const currentButton = event.target;
+      const currentButtonId = parseInt(currentButton.id.split('-')[1]);
+      
+      currentButton.classList.add('active');
+      setTimeout(() => {
+        currentButton.classList.remove('active');
+      }, 500);
+      
+      if (currentButtonId < totalButtons) {
+        unlockNext(currentButtonId + 1, progress + 20);
+      }
+      
+      simulateLoading(() => {
+        window.location.href = lessonUrl;
+      });
+    }
 
-  if (button5State === 'true') {
-    document.getElementById("button-5").disabled = false; 
-  }
-};
+    // Show section (for navigation)
+    function showSection(sectionId) {
+      const navbarLinks = document.querySelectorAll('.navbar a');
+      navbarLinks.forEach(link => link.classList.remove('active'));
 
-function unlockNext(nextId, progressAmount) {
-  let nextButton = document.getElementById("button-" + nextId);
-  if (nextButton) {
-    nextButton.disabled = false; 
-  }
+      const clickedLink = event.currentTarget;
+      clickedLink.classList.add('active');
+      addRippleEffect(clickedLink);
+    }
 
-  if (progress < progressAmount) {
-    progress = progressAmount;
-    document.getElementById("progress-fill").style.width = progress + "%";
-  }
+    // Initialize particles
+    function initParticles() {
+      const container = document.getElementById('particles-js');
+      const particleCount = window.innerWidth < 600 ? 30 : 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        createParticle(container);
+      }
+    }
 
-  if (nextId === '2') {
-    localStorage.setItem('button2Enabled', 'true');
-  } else if (nextId === '3') {
-    localStorage.setItem('button3Enabled', 'true');
-  } else if (nextId === '4') {
-    localStorage.setItem('button4Enabled', 'true');
-  } else if (nextId === '5') {
-    localStorage.setItem('button5Enabled', 'true');
-  }
+    // Create a single particle
+    function createParticle(container) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      const size = Math.random() * 5 + 2;
+      const posX = Math.random() * window.innerWidth;
+      const posY = Math.random() * window.innerHeight;
+      const delay = Math.random() * 5;
+      const duration = Math.random() * 10 + 10;
+      const opacity = Math.random() * 0.5 + 0.1;
+      
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.left = `${posX}px`;
+      particle.style.top = `${posY}px`;
+      particle.style.opacity = opacity;
+      particle.style.background = `rgba(90, 100, 255, ${opacity})`;
+      particle.style.animation = `float ${duration}s infinite ${delay}s`;
+      
+      container.appendChild(particle);
+    }
 
-  if (progress === 100) {
-    document.querySelector(".final").style.backgroundColor = "blue";
-  }
-}
+    // Add ripple effect to buttons
+    function addRippleEffect(element) {
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.position = 'absolute';
+      ripple.style.borderRadius = '50%';
+      ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+      ripple.style.transform = 'scale(0)';
+      ripple.style.animation = 'ripple 0.6s linear';
+      ripple.style.pointerEvents = 'none';
+      
+      element.appendChild(ripple);
+      
+      const rect = element.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    }
 
-function redirectToPage(lessonUrl) {
-  const currentButtonId = event.target.id; 
-  const nextButtonId = `button-${parseInt(currentButtonId.split('-')[1]) + 1}`; // Calculate the next button ID
+    // Create confetti effect
+    function createConfettiEffect() {
+      const container = document.getElementById('particles-js');
+      const confettiCount = 50;
+      
+      for (let i = 0; i < confettiCount; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'particle';
+          
+          const size = Math.random() * 8 + 5;
+          const posX = Math.random() * window.innerWidth;
+          const colors = ['#5a64ff', '#03dac6', '#ff7597', '#ff0266', '#ffffff'];
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          
+          confetti.style.width = `${size}px`;
+          confetti.style.height = `${size}px`;
+          confetti.style.left = `${posX}px`;
+          confetti.style.top = `-10px`;
+          confetti.style.background = color;
+          confetti.style.opacity = '1';
+          confetti.style.borderRadius = '0';
+          confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+          
+          const animationDuration = Math.random() * 3 + 2;
+          confetti.style.transition = `top ${animationDuration}s linear, opacity ${animationDuration}s ease`;
+          
+          container.appendChild(confetti);
+          
+          setTimeout(() => {
+            confetti.style.top = `${window.innerHeight + 10}px`;
+            confetti.style.opacity = '0';
+          }, 10);
+          
+          setTimeout(() => {
+            confetti.remove();
+          }, animationDuration * 1000);
+        }, i * 100);
+      }
+    }
 
-  unlockNext(nextButtonId.split('-')[1], progress + 25); 
-  window.location.href = lessonUrl;
-}
+    // Simulate loading
+    function simulateLoading(callback) {
+      const loader = document.createElement('div');
+      loader.style.position = 'fixed';
+      loader.style.top = '0';
+      loader.style.left = '0';
+      loader.style.width = '100%';
+      loader.style.height = '4px';
+      loader.style.backgroundColor = 'rgba(90, 100, 255, 0.3)';
+      loader.style.zIndex = '10000';
+      
+      const progressBar = document.createElement('div');
+      progressBar.style.height = '100%';
+      progressBar.style.width = '0%';
+      progressBar.style.backgroundColor = 'rgba(90, 100, 255, 1)';
+      progressBar.style.transition = 'width 0.5s ease';
+      
+      loader.appendChild(progressBar);
+      document.body.appendChild(loader);
+      
+      setTimeout(() => {
+        progressBar.style.width = '100%';
+      }, 10);
+      
+      setTimeout(() => {
+        loader.remove();
+        callback();
+      }, 600);
+    }
 
-function showSection(sectionId) {
-  const navbarLinks = document.querySelectorAll('.navbar a');
-  navbarLinks.forEach(link => link.classList.remove('active'));
-
-  const clickedLink = document.querySelector(`.navbar a[onclick*="${sectionId}"]`);
-  if (clickedLink) {
-    clickedLink.classList.add('active');
-  }
-
-  const sections = document.querySelectorAll('.section');
-  sections.forEach(section => {
-    section.classList.remove('active-section');
-  });
-
-  const activeSection = document.getElementById(sectionId);
-  if (activeSection) {
-    activeSection.classList.add('active-section');
-  }
-}
-
-const navbarLinks = document.querySelectorAll('.navbar a');
-navbarLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    const sectionId = link.getAttribute('onclick').match(/'([^']+)'/)[1];
-    showSection(sectionId);
-  });
-});
+    // Add ripple effect style dynamically
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
-
 </html>

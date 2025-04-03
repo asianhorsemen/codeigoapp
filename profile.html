@@ -1,105 +1,185 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: rgba(115, 101, 177, 1);
+      --secondary-color: rgba(1, 1, 27, 1);
+      --accent-color: #4CAF50;
+      --text-color: white;
+    }
+
     body {
       margin: 0;
       padding: 0;
-      background-color: rgba(1, 1, 27, 1);
-      color: white;
-      font-family: monospace;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
     }
 
     .profile-header {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 85%;
+      width: 100%;
       padding: 20px;
+      position: relative;
     }
 
-    .profile-header i {
-      font-size: 20px;
-      color: white;
-      margin-right: 20px;
+    .back-button {
+      position: absolute;
+      left: 20px;
+      font-size: 24px;
+      color: var(--text-color);
+      background: none;
+      border: none;
       cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .back-button:hover {
+      transform: translateX(-5px);
+      color: var(--primary-color);
     }
 
     .profile-header h1 {
-      font-size: 20px;
+      font-size: 24px;
       margin: 0;
-      flex-grow: 1;
       text-align: center;
+      background: linear-gradient(to right, var(--primary-color), #aab6ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
-    .container img {
-      position: relative;
-      top: 30px;
-      display: block;
-      margin: 0 auto;
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
-      cursor: pointer;
-    }
-
-    .profile-name h1 {
-      color: rgba(115, 101, 177, 1);
-      font-size: 18px;
-      position: relative;
-      top: 40px;
-      text-align: center;
-    }
-
-    .profile-name h2 {
-      color: white;
-      font-size: 18px;
-      position: relative;
-      top: 40px;
-      text-align: center;
-    }
-
-    /* Container for the three boxes */
-    .box-container {
+    .profile-content {
       display: flex;
-      gap: 20px;
-      justify-content: space-around;
-      margin-top: 80px;
-      padding: 0 20px;
-    }
-
-    /* Individual box styling */
-    .box {
-      width: 30%; /* Adjust width as needed */
-      background-color: rgba(115, 101, 177, 0.2); /* Box background color */
-      border-radius: 10px;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
-      text-align: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .box img {
-      width: 50px; /* Adjust image size */
-      height: 50px;
+    .profile-image-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .profile-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary-color);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(115, 101, 177, 0.5);
+    }
+
+    .edit-icon {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: var(--primary-color);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .edit-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .profile-info {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .username {
+      font-size: 18px;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .fullname {
+      font-size: 16px;
+      color: var(--text-color);
+      margin-bottom: 20px;
+    }
+
+    /* Stats Container */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
+      max-width: 600px;
+      margin: 30px auto;
+      gap: 15px;
+    }
+
+    .stat-box {
+      background-color: rgba(115, 101, 177, 0.1);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(115, 101, 177, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(115, 101, 177, 0.2);
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      color: var(--primary-color);
       margin-bottom: 10px;
     }
 
-    .box h3 {
-      font-size: 18px;
-      margin: 10px 0;
-      color: rgba(115, 101, 177, 1);
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--text-color);
+      margin-bottom: 5px;
     }
 
-    .box p {
-      font-size: 14px;
-      color: white;
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
     }
 
-    /* Modal for image selection */
+    .country-flag {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -108,109 +188,360 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
       justify-content: center;
       align-items: center;
-      z-index: 1000;
+      backdrop-filter: blur(5px);
     }
 
     .modal-content {
-      background-color: rgba(1, 1, 27, 1);
-      padding: 20px;
-      border-radius: 10px;
+      background-color: var(--secondary-color);
+      border-radius: 15px;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
       text-align: center;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 10px 30px rgba(115, 101, 177, 0.3);
+      animation: modalFadeIn 0.3s ease-out;
     }
 
-    .modal-content img {
-      width: 100px;
-      height: 100px;
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+    }
+
+    .image-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .image-option {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      margin: 10px;
+      object-fit: cover;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: border 0.3s ease;
+      transition: all 0.3s ease;
     }
 
-    .modal-content img:hover {
-      border: 2px solid rgba(115, 101, 177, 1);
+    .image-option:hover, .image-option.selected {
+      border: 2px solid var(--primary-color);
+      transform: scale(1.1);
     }
 
-    .modal-content button {
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
       margin-top: 20px;
-      padding: 10px 20px;
-      background-color: rgba(115, 101, 177, 1);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
     }
 
-    .modal-content button:hover {
-      background-color: rgba(90, 80, 150, 1);
+    .modal-button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
     }
-    h3 {
-      position: relative;
-      bottom: 70px;
+
+    .confirm-button {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .confirm-button:hover {
+      background-color: rgba(90, 80, 150, 1);
+      transform: translateY(-2px);
+    }
+
+    .cancel-button {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .cancel-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 20px auto;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), #aab6ff);
+      border-radius: 5px;
+      width: 60%; /* Adjust based on actual progress */
+      transition: width 0.5s ease;
+    }
+
+    /* Country Select Dropdown */
+    .select2-container {
+      width: 100% !important;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .select2-selection {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: white !important;
+      height: 40px !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .select2-selection__arrow {
+      height: 38px !important;
+    }
+
+    .select2-selection__placeholder {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .select2-dropdown {
+      background-color: var(--secondary-color) !important;
+      border: 1px solid var(--primary-color) !important;
+    }
+
+    .select2-results__option {
+      color: white !important;
+      padding: 10px !important;
+    }
+
+    .select2-results__option--highlighted {
+      background-color: var(--primary-color) !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .profile-header h1 {
+        font-size: 20px;
+      }
+      
+      .profile-image {
+        width: 100px;
+        height: 100px;
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .stat-box {
+        padding: 10px;
+      }
+
+      .stat-icon {
+        font-size: 20px;
+      }
+
+      .stat-value {
+        font-size: 18px;
+      }
+
+      .stat-label {
+        font-size: 10px;
+      }
+
+      .country-flag {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stat-value {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="profile-header">
-      <i class="fa-solid fa-angle-left"></i>
-      <h1>Profile</h1>
+  <div class="profile-header">
+    <button class="back-button" onclick="window.history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1>Profile Settings</h1>
+  </div>
+
+  <div class="profile-content">
+    <div class="profile-image-container">
+      <img id="profile-pic" src="images/profile-icon.png" alt="Profile Icon" class="profile-image">
+      <div class="edit-icon" onclick="openModal()">
+        <i class="fas fa-camera"></i>
+      </div>
     </div>
 
-    <!-- Profile Image -->
-    <img id="profile-pic" src="images/profile-icon.png" alt="Profile Icon" onclick="openModal()">
-
-    <div class="profile-name">
-      <h1>username</h1>
-      <h2>Marlon Ben V. Tan</h2>
+    <div class="profile-info">
+      <div class="username">@username</div>
+      <div class="fullname">Marlon Ben V. Tan</div>
     </div>
 
-    <!-- Three Boxes -->
-    <div class="box-container">
+    <div class="progress-container">
+      <div class="progress-label">
+        <span>Learning Progress</span>
+        <span>60%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="stats-container">
       <!-- Time Box -->
-      <div class="box">
-        <img src="images/profile-time.png" alt="Time Icon">
-        <h3>Time</h3>
-        <p id="timer">00:00:00</p> <!-- Timer will be updated here -->
+      <div class="stat-box">
+        <div class="stat-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-value" id="timer">00:00:00</div>
+        <div class="stat-label">Learning Time</div>
       </div>
 
-      <!-- Exp Box -->
-      <div class="box">
-        <img src="images/profile-exp.png" alt="Exp Icon">
-        <h3>Exp</h3>
-        <p>500 XP</p>
+      <!-- XP Box -->
+      <div class="stat-box">
+        <div class="stat-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="stat-value">500</div>
+        <div class="stat-label">Experience Points</div>
       </div>
 
-      <!-- Level Box -->
-      <div class="box">
-        <img src="images/profile-level.png" alt="Level Icon">
-        <h3>Level</h3>
-        <p>5</p>
+      <!-- Country Box -->
+      <div class="stat-box" id="country-box">
+        <img id="country-flag" src="https://flagcdn.com/w40/ph.png" class="country-flag">
+        <div class="stat-value" id="country-name">Philippines</div>
+        <div class="stat-label">Country</div>
       </div>
     </div>
 
-    <!-- Modal for Image Selection -->
-    <div id="image-modal" class="modal">
-      <div class="modal-content">
-        <h2>Choose a Profile Picture</h2>
-        <div>
-          <img src="images/profile-icon-1.png" alt="Profile 1" onclick="selectImage('images/profile-icon-1.png')">
-          <img src="images/profile-icon-2.png" alt="Profile 2" onclick="selectImage('images/profile-icon-2.png')">
-          <img src="images/profile-icon-3.png" alt="Profile 3" onclick="selectImage('images/profile-icon-3.png')">
-        </div>
-        <button onclick="closeModal()">Close</button>
+    <!-- Country Select Dropdown (hidden) -->
+    <div style="width: 100%; max-width: 300px; margin: 20px auto; display: none;">
+      <select id="country-select" class="js-example-basic-single" style="width: 100%">
+        <option value="">Select your country</option>
+        <option value="US" data-flag="https://flagcdn.com/w40/us.png">United States</option>
+        <option value="PH" data-flag="https://flagcdn.com/w40/ph.png" selected>Philippines</option>
+        <option value="UK" data-flag="https://flagcdn.com/w40/gb.png">United Kingdom</option>
+        <option value="CA" data-flag="https://flagcdn.com/w40/ca.png">Canada</option>
+        <option value="AU" data-flag="https://flagcdn.com/w40/au.png">Australia</option>
+        <option value="JP" data-flag="https://flagcdn.com/w40/jp.png">Japan</option>
+        <option value="SG" data-flag="https://flagcdn.com/w40/sg.png">Singapore</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Image Selection Modal -->
+  <div id="image-modal" class="modal">
+    <div class="modal-content">
+      <h2 class="modal-title">Choose a Profile Picture</h2>
+      <div class="image-options">
+        <img src="images/profile-icon-1.png" alt="Profile 1" class="image-option" onclick="selectImage(this, 'images/profile-icon-1.png')">
+        <img src="images/profile-icon-2.png" alt="Profile 2" class="image-option" onclick="selectImage(this, 'images/profile-icon-2.png')">
+        <img src="images/profile-icon-3.png" alt="Profile 3" class="image-option" onclick="selectImage(this, 'images/profile-icon-3.png')">
+        <img src="images/profile-icon-4.png" alt="Profile 4" class="image-option" onclick="selectImage(this, 'images/profile-icon-4.png')">
+        <img src="images/profile-icon-5.png" alt="Profile 5" class="image-option" onclick="selectImage(this, 'images/profile-icon-5.png')">
+        <img src="images/profile-icon-6.png" alt="Profile 6" class="image-option" onclick="selectImage(this, 'images/profile-icon-6.png')">
+      </div>
+      <div class="modal-buttons">
+        <button class="modal-button cancel-button" onclick="closeModal()">Cancel</button>
+        <button class="modal-button confirm-button" onclick="confirmImage()">Confirm</button>
       </div>
     </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script>
+    // Initialize Select2 for country selection
+    $(document).ready(function() {
+      $('.js-example-basic-single').select2({
+        placeholder: "Select your country",
+        allowClear: true,
+        width: '100%'
+      });
+      
+      // Load saved country if exists
+      const savedCountry = localStorage.getItem('userCountry') || 'PH';
+      const savedCountryName = localStorage.getItem('userCountryName') || 'Philippines';
+      const savedCountryFlag = localStorage.getItem('userCountryFlag') || 'https://flagcdn.com/w40/ph.png';
+      
+      $('#country-select').val(savedCountry).trigger('change');
+      updateCountryBox(savedCountryName, savedCountryFlag);
+      
+      // Save country when changed
+      $('#country-select').on('change', function() {
+        const selectedOption = $(this).find('option:selected');
+        const countryCode = selectedOption.val();
+        const countryName = selectedOption.text();
+        const countryFlag = selectedOption.data('flag');
+        
+        if (countryCode) {
+          localStorage.setItem('userCountry', countryCode);
+          localStorage.setItem('userCountryName', countryName);
+          localStorage.setItem('userCountryFlag', countryFlag);
+          updateCountryBox(countryName, countryFlag);
+        }
+      });
+      
+      // Make country box clickable to show dropdown
+      $('#country-box').click(function() {
+        $('#country-select').select2('open');
+      });
+    });
+
+    function updateCountryBox(name, flagUrl) {
+      $('#country-name').text(name);
+      $('#country-flag').attr('src', flagUrl);
+    }
+
+    // Image selection variables
+    let selectedImage = null;
+    let selectedImageSrc = null;
+
     // Function to open the modal
     function openModal() {
       document.getElementById('image-modal').style.display = 'flex';
+      // Reset selection when opening modal
+      const options = document.querySelectorAll('.image-option');
+      options.forEach(option => option.classList.remove('selected'));
+      selectedImage = null;
+      selectedImageSrc = null;
     }
 
     // Function to close the modal
@@ -219,14 +550,43 @@
     }
 
     // Function to select an image from the modal
-    function selectImage(imageSrc) {
-      const profilePic = document.getElementById('profile-pic');
-      profilePic.src = imageSrc;
+    function selectImage(element, imageSrc) {
+      // Remove selected class from all options
+      const options = document.querySelectorAll('.image-option');
+      options.forEach(option => option.classList.remove('selected'));
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      selectedImage = element;
+      selectedImageSrc = imageSrc;
+    }
+
+    // Function to confirm image selection
+    function confirmImage() {
+      if (selectedImageSrc) {
+        const profilePic = document.getElementById('profile-pic');
+        profilePic.src = selectedImageSrc;
+        // Save to localStorage
+        localStorage.setItem('profileImage', selectedImageSrc);
+      }
       closeModal();
     }
 
+    // Load saved profile image if exists
+    const savedImage = localStorage.getItem('profileImage');
+    if (savedImage) {
+      document.getElementById('profile-pic').src = savedImage;
+    }
+
     // Timer Logic
-    let startTime = Date.now(); // Record the start time
+    let startTime = localStorage.getItem('learningStartTime');
+    if (!startTime) {
+      startTime = Date.now();
+      localStorage.setItem('learningStartTime', startTime);
+    } else {
+      startTime = parseInt(startTime);
+    }
+
     const timerElement = document.getElementById('timer');
 
     function updateTimer() {
@@ -247,7 +607,7 @@
 
     // Update the timer every second
     setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call
   </script>
 </body>
-
 </html>

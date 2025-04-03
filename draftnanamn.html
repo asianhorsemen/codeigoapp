@@ -1,0 +1,479 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Codeigo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: rgba(1, 1, 27, 1);
+        color: white;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+      }
+
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      .particle {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+      }
+
+      .container {
+        position: relative;
+        top: 400px;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        position: absolute;
+        transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+      }
+
+      #page-1 {
+        z-index: 2;
+      }
+
+      #page-2 {
+        display: none;
+        color: white;
+        z-index: 1;
+      }
+
+      .logo {
+        width: 100%;
+        margin-bottom: 30px;
+        animation: fadeIn 1s ease-in-out;
+        position: absolute;
+        top: 60px;
+      }
+
+      .text {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      .small-text {
+        font-size: 16px;
+        opacity: 0.8;
+        margin-bottom: 40px;
+        animation: fadeIn 2s ease-in-out;
+      }
+
+      .start-button {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeIn 2.5s ease-in-out;
+      }
+
+      .start-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Hide first page and show second page */
+      .hidden {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
+      }
+
+      /* Fade-in effect for page 2 */
+      .visible {
+        display: flex !important;
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+      }
+
+      #page-2 .login-container {
+        position: fixed;
+        top: 300px;
+        border-radius: 20px;
+        padding: 30px;
+        width: 75%;
+        max-width: 350px;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      #page-2 .signup-container {
+        position: relative;
+
+      }
+
+      #page-2 h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      .input-group {
+        position: relative;
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 6px 0;
+        border: none;
+        border-bottom: 2px solid rgb(255, 255, 255);
+        background: transparent;
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: border-bottom 0.3s ease;
+      }
+
+      .input-group input:focus {
+        border-bottom: 2px solid #6a11cb;
+      }
+
+      .input-group label {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.5);
+        pointer-events: none;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus+label,
+      .input-group input:not(:placeholder-shown)+label {
+        top: -10px;
+        font-size: 12px;
+        color: #ffffff;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .signup-link {
+        margin-top: 15px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .signup-link a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+      }
+
+      .signup-link a:hover {
+        color: #6a11cb;
+      }
+
+      /* Hide Sign Up Form Initially */
+      #signupForm {
+        display: none;
+      }
+
+      
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .selected-text {
+        position: fixed;
+        top: 200px;
+        left: 40px;
+        color: white;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .container {
+        display: inline-block;
+      }
+
+      .typed-out {
+        position: relative;
+        overflow: hidden;
+        border-right: .15em solid orange;
+        white-space: nowrap;
+        animation:
+          typing 1s forwards;
+        font-size: 1.6rem;
+        width: 0;
+        color: white;
+        z-index: 999;
+        bottom: 20px;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0
+        }
+
+        to {
+          width: 100%
+        }
+      }
+
+      .logo.move-up {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        /* Slightly smaller */
+        transition: top 0.8s ease-in-out, width 0.8s ease-in-out;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Logo outside of pages -->
+    <img src="images/codeigo-logo.png" alt="Codeigo Logo" class="logo">
+
+    <!-- Page 1: Welcome Screen -->
+    <div class="container" id="page-1">
+      <div class="text">Welcome to Codeigo</div>
+      <div class="small-text">Your journey to coding mastery starts here</div>
+      <button class="start-button" id="startButton">Get Started</button>
+    </div>
+
+    <!-- Page 2: Next Section -->
+    <div class="container" id="page-2">
+      <div class="login-container">
+        <!-- Login Form -->
+        <div id="loginForm">
+          <div class="typed-out" id="text-1">Welcome to Codeigo</div>
+          <div class="input-group">
+            <input type="email" id="Email" placeholder=" " required />
+            <label for="Email">Email</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="password" placeholder=" " required />
+            <label for="password">Password</label>
+          </div>
+          <button id="submit" class="btn">Login</button>
+          
+          <div class="signup-link">
+            <p>Don't have an account? <a href="javascript:void(0);" id="showSignup">Sign Up</a></p>
+          </div>
+        </div>
+      </div>
+      <!-- Signup Form -->
+      <div class="signup-container">
+  <div id="signupForm">
+    <div class="input-group">
+      <input type="email" id="signupEmail" placeholder=" " required />
+      <label for="signupEmail">Email</label>
+    </div>
+    <div class="input-group">
+      <input type="password" id="signupPassword" placeholder=" " required />
+      <label for="signupPassword">Password</label>
+    </div>
+    <button id="signupBtn" class="btn">Sign Up</button>
+    
+    <div class="signup-link">
+      <p>Already have an account? <a href="javascript:void(0);" id="showLogin">Login</a></p>
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+      // Create particle effect
+      function createParticles() {
+        const container = document.getElementById('particles');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+
+          // Random properties
+          const size = Math.random() * 5 + 2;
+          const posX = Math.random() * 100;
+          const posY = Math.random() * 100;
+          const delay = Math.random() * 5;
+          const duration = Math.random() * 10 + 10;
+
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.left = `${posX}%`;
+          particle.style.top = `${posY}%`;
+          particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+
+          container.appendChild(particle);
+        }
+      }
+
+      // Add floating animation dynamically
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
+            opacity: 0.5;
+          }
+          50% {
+            transform: translateY(-20px) translateX(10px);
+            opacity: 0.8;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Initialize particles
+      createParticles();
+
+      // Button click handler
+      document.getElementById('startButton').addEventListener('click', function () {
+        // Move the logo up
+        document.querySelector('.logo').classList.add('move-up');
+
+        // Fade out the first page elements
+        document.querySelector('.text').classList.add('hidden');
+        document.querySelector('.small-text').classList.add('hidden');
+        document.querySelector('.start-button').classList.add('hidden');
+
+        // Wait for the transition before displaying the next page
+        setTimeout(() => {
+          document.getElementById('page-1').style.display = "none"; // Hide Page 1
+          document.getElementById('page-2').style.display = "flex"; // Show Page 2
+        }, 800);
+      });
+
+      // Import Firebase services
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+        measurementId: "YOUR_MEASUREMENT_ID"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // Login function
+      document.getElementById('submit').addEventListener('click', function () {
+        const email = document.getElementById('Email').value;
+        const password = document.getElementById('password').value;
+
+        // Firebase Authentication - Sign In
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log('Login successful:', user);
+            // Redirect or show logged-in UI
+          })
+          .catch((error) => {
+            console.error('Error logging in:', error);
+            alert('Invalid credentials. Please try again.');
+          });
+      });
+
+      // Sign Up function
+      document.getElementById("signupBtn").addEventListener("click", function () {
+        const email = document.getElementById("signupEmail").value;
+        const password = document.getElementById("signupPassword").value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Redirect after successful signup
+            window.location.href = "introduction.html";
+          })
+          .catch((error) => {
+            alert("Error: " + error.message);
+          });
+      });
+
+      // Toggle between Login and Sign Up forms
+  document.getElementById("showSignup").addEventListener("click", function () {
+    document.getElementById("loginForm").style.display = "none";  // Hide login form
+    document.getElementById("signupForm").style.display = "block";  // Show signup form
+  });
+
+  document.getElementById("showLogin").addEventListener("click", function () {
+    document.getElementById("signupForm").style.display = "none";  // Hide signup form
+    document.getElementById("loginForm").style.display = "block";  // Show login form
+  });
+
+    </script>
+
+  </body>
+
+  </html>

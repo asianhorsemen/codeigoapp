@@ -1,338 +1,553 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <title>Progress Bar Example</title>
-  <style>
-    body::-webkit-scrollbar {
-      display: none;
-    }
-    body {
-      -ms-overflow-style: none;
-      background: url('/images/background.png') no-repeat center center fixed;
-      background-size: cover;
-      scrollbar-width: none;
-      overflow-x: hidden;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow-y: scroll;
-    }
-    .page {
-      display: none;
-      text-align: center;
-    }
-    .page.active {
-      display: block;
-    }
-    .progress-container {
-      width: 100%;
-      margin: 20px auto;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      height: 10px;
-      position: fixed;
-      top: 0;
-    }
-    .progress-fill {
-      height: 100%;
-      background-color: rgba(90, 100, 255, 1);
-      border-radius: 10px;
-      width: 0%;
-      transition: width 0.5s ease;
-    }
-    .progress-text {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-      color: rgba(90, 100, 255, 1);
-    }
-    button {
-      background-color: rgb(2, 2, 39);
-      border-radius: 10px;
-      border: 3px solid rgba(90, 100, 255, 1);
-      box-shadow: 0px 5px 0px rgba(90, 100, 255, 1);
-      color: white;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 20px;
-      font-weight: bold;
-      margin: 10px;
-      height: 40px;
-      text-align: center;
-      padding: 1px;
-      width: 80%;
-      cursor: pointer;
-      transition: all 0.1s ease-in-out;
-    }
-    button:disabled {
-      background-color: rgba(90, 100, 255, 0.5);
-      cursor: not-allowed;
-    }
-    #page-1 img,
-    #page-2 img {
-      position: relative;
-      bottom: 200px;
-      border-radius: 10px;
-    }
-    #page-1 .next,
-    #page-2 .next {
-      position: fixed;
-      right: 0px;
-      bottom: 0px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Mobile Tutor - Lesson 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: rgba(1, 1, 27, 1);
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+            width: 600px;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Header */
+        .app-header {
+            background-color: rgba(1, 1, 27, 1);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    #page-2 h1 {
-      position: relative;
-      top: 20px;
-    }
+        .logo img {
+            width: 40px;
+        }
+        
+        .logo span {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
 
-    p {
-      position: relative;
-      top: 50px;
-      text-align: center;
-      font-size: 15px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      width: 300px;
-      margin: 0 auto;
-    }
-    #page-1 video,
-    #page-2 video {
-      position: fixed;
-      top: 490px;
-      left: -15px;
-      max-width: 140px;
-      border-radius: 10px;
-      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    #page-3 .question {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    #page-3 .options {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-    #page-3 .options button {
-      width: 60%;
-      font-size: 18px;
-    }
-    #page-3 .result {
-      margin-top: 20px;
-      font-size: 18px;
-      color: rgba(90, 100, 255, 1);
-    }
-    #page-4 {
-      text-align: center;
-    }
-    #page-4 h1 {
-      font-size: 32px;
-      color: rgba(90, 100, 255, 1);
-    }
-    #page-4 p {
-      font-size: 18px;
-    }
-    @media (max-width: 600px) {
-      body {
-        justify-content: flex-start;
-        padding-top: 20px;
-      }
-      .progress-container {
-        width: 70%;
-        top: 0px;
-      }
-      #page-1 .img,
-      #page-2 .img {
-        width: 80%;
-        height: auto;
-        top: 20px;
-        margin-top: 30px;
-        margin: 10px;
-      }
-      #page-1 .next {
-        width: 70%;
-        margin: 20px auto;
-        position: fixed;
-        bottom: 10px;
-        right: 100px;
-      }
-      #page-2 .next {
-        width: 50%;
-        margin: 20px auto;
-        position: fixed;
-        bottom: 10px;
-        left: -10px;
-      }
-      .page h1 {
-        font-size: 24px;
-      }
-      .page p {
-        font-size: 16px;
-      }
-      button {
-        width: 90%;
-        font-size: 18px;
-      }
-    }
-    a {
-        text-decoration: none;
-    }
-    .return {
-      position: fixed;
-      left:-10px;
-      bottom: 20px;
-      width: 20%;
-    }
-    .volume-button {
-      position: fixed;
-      bottom: 20px;
-      right: 0px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      font-size: 24px;
-      width: 20%;
-    }
-  </style>
+        .progress-container {
+            width: 100%;
+            height: 3px;
+            background-color: blue;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: rgba(90, 100, 255, 1);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .tutorial-step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tutorial-step.active {
+            display: block;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .step-badge {
+            background: #ffd43b;
+            color: #306998;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+
+        .step-content p {
+            color: white;
+        }
+        
+        .step-content {
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .step-image {
+            width: 100%;
+            height: 150px;
+            background: #eee;
+            border-radius: 6px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+            overflow: hidden;
+        }
+        
+        .code-block {
+            background: #282c34;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 12px 0;
+            overflow-x: auto;
+            color: #abb2bf;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .code-block .language {
+            position: absolute;
+            top: 3px;
+            right: 8px;
+            color: #7f848e;
+            font-size: 10px;
+        }
+        
+        .code-block .keyword {
+            color: #c678dd;
+        }
+        
+        .code-block .function {
+            color: #61afef;
+        }
+        
+        .code-block .string {
+            color: #98c379;
+        }
+        
+        .code-block .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+        
+        .code-block .number {
+            color: #d19a66;
+        }
+        
+        .try-it {
+            padding: 12px;
+            border-radius: 0 6px 6px 0;
+            margin: 15px 0;
+        }
+        
+        .try-it h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+        
+        .try-it h4 i {
+            margin-right: 6px;
+            color: #306998;
+            font-size: 16px;
+        }
+        
+        .run-btn {
+            background: #3776ab;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .output {
+            background: #282c34;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-family: monospace;
+            min-height: 40px;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+        
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        
+        .prev-btn {
+            background: transparent;
+            color: #3776ab;
+        }
+        
+        .next-btn {
+            background: linear-gradient(135deg, #3776ab, #306998);
+            color: white;
+        }
+        
+        .next-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .finish-btn {
+            background: #4cc9f0;
+            color: white;
+            display: none;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .content-area::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <button class="volume-button" onclick="toggleSound()">
-    <i data-lucide="volume-2"></i>
-  </button>
-  <div class="progress-container">
-    <div class="progress-fill" id="progress-fill"></div>
-  </div>
-  <div class="page active" id="page-1">
-    <img class="img" src="/images/data-types.png" alt="Guido van Rossum">
-    <video src="/video/robot.mp4" autoplay loop muted onpause="this.play()"
-      controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
-    <div class="container">
-      <p class="text">In programming, data types and variables are fundamental concepts that help in storing and manipulating data. Understanding these concepts is essential for writing efficient and error-free programs.</p>
-      <button class="next" onclick="nextPage()">Next</button>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <img src="/images/codeigo-logo.png" alt="Codeigo Logo">
+                <span>Codeigo</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </header>
+        
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Step 1 -->
+            <div class="tutorial-step active" id="step1">
+                <h2 class="step-title">Python Functions <span class="step-badge">Lesson 2</span></h2>
+                <div class="step-content">
+                    <p>Functions are reusable blocks of code that perform specific tasks. They help organize and modularize your code.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Define a simple function</span><br>
+                        <span class="keyword">def</span> <span class="function">greet</span>(name):<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">f"Hello, {name}!"</span>)<br>
+                        <br>
+                        <span class="comment"># Call the function</span><br>
+                        <span class="function">greet</span>(<span class="string">"Alice"</span>)<br>
+                        <br>
+                        <span class="comment"># Function with return value</span><br>
+                        <span class="keyword">def</span> <span class="function">square</span>(num):<br>
+                        &nbsp;&nbsp;<span class="keyword">return</span> num * num<br>
+                        <br>
+                        result = <span class="function">square</span>(<span class="number">4</span>)<br>
+                        <span class="keyword">print</span>(result)  <span class="comment"># Output: 16</span>
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-cog"></i> Exercise time</h4>
+                        <p>Create a function that adds two numbers and returns the result:</p>
+                        <div class="code-block" id="editableCode1" contenteditable="true">
+                            <span class="keyword">def</span> <span class="function">add_numbers</span>(a, b):<br>
+                            &nbsp;&nbsp;<span class="comment"># Your code here</span><br>
+                            <br>
+                            <span class="comment"># Test your function</span><br>
+                            <span class="keyword">print</span>(<span class="function">add_numbers</span>(<span class="number">5</span>, <span class="number">3</span>))
+                        </div>
+                        <button class="run-btn" onclick="runCode(1)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="tutorial-step" id="step2">
+                <h2 class="step-title">Lists</h2>
+                <div class="step-content">
+                    <p>Lists are ordered, mutable collections that can hold items of different data types.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Create a list</span><br>
+                        fruits = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>]<br>
+                        numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]<br>
+                        mixed = [<span class="number">1</span>, <span class="string">"hello"</span>, <span class="keyword">True</span>, <span class="number">3.14</span>]<br>
+                        <br>
+                        <span class="comment"># Access elements (0-based index)</span><br>
+                        <span class="keyword">print</span>(fruits[<span class="number">0</span>])  <span class="comment"># "apple"</span><br>
+                        <span class="keyword">print</span>(fruits[-<span class="number">1</span>]) <span class="comment"># "cherry" (last element)</span><br>
+                        <br>
+                        <span class="comment"># Modify elements</span><br>
+                        fruits[<span class="number">1</span>] = <span class="string">"blueberry"</span><br>
+                        <br>
+                        <span class="comment"># List methods</span><br>
+                        fruits.<span class="function">append</span>(<span class="string">"orange"</span>)  <span class="comment"># Add to end</span><br>
+                        fruits.<span class="function">insert</span>(<span class="number">1</span>, <span class="string">"mango"</span>) <span class="comment"># Insert at position</span><br>
+                        fruits.<span class="function">remove</span>(<span class="string">"apple"</span>) <span class="comment"># Remove item</span><br>
+                        <span class="keyword">print</span>(<span class="function">len</span>(fruits))  <span class="comment"># Get length</span>
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-flask"></i> Try It Yourself</h4>
+                        <p>Create a list of numbers and calculate their sum:</p>
+                        <div class="code-block" id="editableCode2" contenteditable="true">
+                            numbers = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>]<br>
+                            total = <span class="number">0</span><br>
+                            <span class="comment"># Your code here to sum the numbers</span><br>
+                            <span class="keyword">print</span>(total)
+                        </div>
+                        <button class="run-btn" onclick="runCode(2)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output2"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="tutorial-step" id="step3">
+                <h2 class="step-title">Dictionaries</h2>
+                <div class="step-content">
+                    <p>Dictionaries store key-value pairs and are optimized for fast lookups.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Create a dictionary</span><br>
+                        student = {<br>
+                        &nbsp;&nbsp;<span class="string">"name"</span>: <span class="string">"Alice"</span>,<br>
+                        &nbsp;&nbsp;<span class="string">"age"</span>: <span class="number">21</span>,<br>
+                        &nbsp;&nbsp;<span class="string">"courses"</span>: [<span class="string">"Math"</span>, <span class="string">"Physics"</span>]<br>
+                        }<br>
+                        <br>
+                        <span class="comment"># Access values</span><br>
+                        <span class="keyword">print</span>(student[<span class="string">"name"</span>])  <span class="comment"># "Alice"</span><br>
+                        <span class="keyword">print</span>(student.<span class="function">get</span>(<span class="string">"age"</span>)) <span class="comment"># 21</span><br>
+                        <br>
+                        <span class="comment"># Add/update items</span><br>
+                        student[<span class="string">"grade"</span>] = <span class="string">"A"</span><br>
+                        student.<span class="function">update</span>({<span class="string">"age"</span>: <span class="number">22</span>, <span class="string">"city"</span>: <span class="string">"Boston"</span>})<br>
+                        <br>
+                        <span class="comment"># Dictionary methods</span><br>
+                        <span class="keyword">print</span>(student.<span class="function">keys</span>())   <span class="comment"># All keys</span><br>
+                        <span class="keyword">print</span>(student.<span class="function">values</span>()) <span class="comment"># All values</span><br>
+                        <span class="keyword">print</span>(student.<span class="function">items</span>()) <span class="comment"># Key-value pairs</span>
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-flask"></i> Try It Yourself</h4>
+                        <p>Create a dictionary for a book with title, author, and year:</p>
+                        <div class="code-block" id="editableCode3" contenteditable="true">
+                            book = {<br>
+                            &nbsp;&nbsp;<span class="comment"># Add key-value pairs here</span><br>
+                            }<br>
+                            <br>
+                            <span class="comment"># Print the book details</span><br>
+                            <span class="keyword">print</span>(<span class="string">f"Title: {book['title']}"</span>)<br>
+                            <span class="keyword">print</span>(<span class="string">f"Author: {book['author']}"</span>)
+                        </div>
+                        <button class="run-btn" onclick="runCode(3)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="tutorial-step" id="step4">
+                <h2 class="step-title">Complete!</h2>
+                <div class="step-content">
+                    <div style="text-align: center; padding: 25px 0;">
+                        <i class="fas fa-trophy" style="font-size: 50px; color: #ffd43b; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 12px; color: #306998;">Python Functions & Data Structures Mastered!</h3>
+                        <p style="margin-bottom: 20px;">You've completed Lesson 2 on Python functions and data structures.</p>
+                        <button style="background: #3776ab; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;" onclick="window.location.href='/homepage.html'">
+                            Continue to Lesson 3
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button class="nav-btn prev-btn" id="prevBtn" disabled>
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button class="nav-btn next-btn" id="nextBtn">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="nav-btn finish-btn" id="finishBtn">
+                Finish <i class="fas fa-check"></i>
+            </button>
+        </div>
     </div>
-  </div>
-  <div class="page" id="page-2">
-    <video src="/video/robot.mp4" autoplay loop muted onpause="this.play()"
-      controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
-      <h1>1. What is a Variable?</h1>
-    <p class="text">A variable is a name that refers to a value stored in memory. In Python, you create a variable by assigning a value to a name using the = operator.</p>
-    <button class="return" onclick="previousPage()">
-      <i data-lucide="corner-up-left"></i>
-    </button>
-    <button class="next" onclick="nextPage()">Next</button>
-  </div>
-  <div class="page" id="page-3">
-    <h1>Page 3</h1>
-    <div class="question">What year was Python created?</div>
-    <div class="options">
-      <button onclick="checkAnswer(1989)">1989</button>
-      <button onclick="checkAnswer(1991)">1991</button>
-      <button onclick="checkAnswer(1995)">1995</button>
-      <button onclick="checkAnswer(2000)">2000</button>
-    </div>
-    <div class="result" id="result"></div>
-    <button class="return" onclick="previousPage()">
-      <i data-lucide="corner-up-left"></i>
-    </button>
-  </div>
-  <div class="page" id="page-4">
-    <h1>Success!</h1>
-    <button onclick="window.location.href='/navbar/homepage.html'">Go to Homepage</button>
-    <button class="return" onclick="previousPage()">Return</button>
-  </div>
-  <script>
-    lucide.createIcons();
-    let currentPage = 1;
-    const totalPages = 4;
-    let isSoundOn = true;
-    function updateProgress() {
-      const progressFill = document.getElementById('progress-fill');
-      const progressPercentage = (currentPage / totalPages) * 100;
-      progressFill.style.width = `${progressPercentage}%`;
-    }
-    function playPageSound() {
-      if (!isSoundOn) return;
-      let soundFile = '';
-      switch (currentPage) {
-        case 1:
-          soundFile = 'voice-over/voice-over1.mp3';
-          break;
-        case 2:
-          soundFile = 'voice-over/voice-over#2.mp3';
-          break;
-        case 3:
-          soundFile = 'sound/page3.mp3';
-          break;
-        case 4:
-          soundFile = 'sound/page4.mp3';
-          break;
-      }
-      if (soundFile) {
-        const audio = new Audio(soundFile);
-        audio.play();
-      }
-    }
-    function toggleSound() {
-      isSoundOn = !isSoundOn;
-      const volumeButtonIcon = document.querySelector('.volume-button i');
-      if (isSoundOn) {
-        volumeButtonIcon.setAttribute('data-lucide', 'volume-2');
-        playPageSound();
-      } else {
-        volumeButtonIcon.setAttribute('data-lucide', 'volume-x');
-      }
-      lucide.createIcons();
-    }
-    function nextPage() {
-      if (currentPage < totalPages) {
-        document.getElementById(`page-${currentPage}`).classList.remove('active');
-        currentPage++;
-        document.getElementById(`page-${currentPage}`).classList.add('active');
-        updateProgress();
-      }
-    }
-    function previousPage() {
-      if (currentPage > 1) {
-        document.getElementById(`page-${currentPage}`).classList.remove('active');
-        currentPage--;
-        document.getElementById(`page-${currentPage}`).classList.add('active');
-        updateProgress();
-      }
-    }
-    function checkAnswer(year) {
-      const resultDiv = document.getElementById('result');
-      if (year === 1991) {
-        resultDiv.innerText = "Correct! Python was created in 1991.";
-        resultDiv.style.color = "green";
-        setTimeout(() => {
-          nextPage();
-        }, 1000);
-      } else {
-        resultDiv.innerText = "Incorrect. Resetting to the first page...";
-        resultDiv.style.color = "red";
-        setTimeout(() => {
-          resetToFirstPage();
-        }, 1000);
-      }
-    }
-    function resetToFirstPage() {
-      document.getElementById(`page-${currentPage}`).classList.remove('active');
-      currentPage = 1;
-      document.getElementById(`page-${currentPage}`).classList.add('active');
-      updateProgress();
-    }
-    updateProgress();
-  </script>
+
+    <script>
+        // Tutorial Navigation
+        const steps = document.querySelectorAll('.tutorial-step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const progressBar = document.getElementById('progressBar');
+        let currentStep = 0;
+        
+        // Update progress
+        function updateProgress() {
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            prevBtn.disabled = currentStep === 0;
+            
+            if (currentStep === steps.length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                finishBtn.style.display = 'none';
+            }
+        }
+        
+        // Show current step
+        function showStep(stepIndex) {
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === stepIndex);
+            });
+            currentStep = stepIndex;
+            updateProgress();
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+        
+        // Event listeners
+        nextBtn.addEventListener('click', function() {
+            if (currentStep < steps.length - 1) {
+                showStep(currentStep + 1);
+            }
+        });
+        
+        prevBtn.addEventListener('click', function() {
+            if (currentStep > 0) {
+                showStep(currentStep - 1);
+            }
+        });
+        
+        finishBtn.addEventListener('click', function() {
+            alert('🎉 Congratulations! You completed Lesson 2 on Python Functions and Data Structures!');
+        });
+        
+        // Simple code execution simulation
+        function runCode(stepNum) {
+            const outputElement = document.getElementById(`output${stepNum}`);
+            const codeElement = document.getElementById(`editableCode${stepNum}`);
+            
+            try {
+                const code = codeElement.innerText || codeElement.textContent;
+                
+                // Demo responses for different steps
+                if (stepNum === 1) {
+                    if (code.includes("return a + b")) {
+                        outputElement.innerHTML = "8";
+                    } else {
+                        outputElement.innerHTML = "None\n(Your function needs to return the sum)";
+                    }
+                } 
+                else if (stepNum === 2) {
+                    if (code.includes("for") || code.includes("sum(")) {
+                        outputElement.innerHTML = "100";
+                    } else {
+                        outputElement.innerHTML = "0\n(You need to sum the numbers)";
+                    }
+                }
+                else if (stepNum === 3) {
+                    if (code.includes("title") && code.includes("author")) {
+                        outputElement.innerHTML = "Title: [Your Title]\nAuthor: [Your Author]";
+                    } else {
+                        outputElement.innerHTML = "KeyError: 'title'\n(Add title and author to the dictionary)";
+                    }
+                }
+                else {
+                    outputElement.innerHTML = "Code executed successfully!";
+                }
+            } catch (e) {
+                outputElement.innerHTML = `Error: ${e.message}`;
+            }
+        }
+        
+        // Initialize
+        showStep(0);
+    </script>
 </body>
 </html>

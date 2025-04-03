@@ -3,37 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Python Mobile Tutor - Lesson 3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: rgba(1, 1, 27, 1);
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+            width: 600px;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Header */
+        .app-header {
+            background-color: rgba(1, 1, 27, 1);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 40px;
+        }
+        
+        .logo span {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 3px;
+            background-color: blue;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: rgba(90, 100, 255, 1);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .tutorial-step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tutorial-step.active {
+            display: block;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .step-badge {
+            background: #ffd43b;
+            color: #306998;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+
+        .step-content p {
+            color: white;
+        }
+        
+        .step-content {
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .step-image {
+            width: 100%;
+            height: 150px;
+            background: #eee;
+            border-radius: 6px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+            overflow: hidden;
+        }
+        
+        .code-block {
+            background: #282c34;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 12px 0;
+            overflow-x: auto;
+            color: #abb2bf;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .code-block .language {
+            position: absolute;
+            top: 3px;
+            right: 8px;
+            color: #7f848e;
+            font-size: 10px;
+        }
+        
+        .code-block .keyword {
+            color: #c678dd;
+        }
+        
+        .code-block .function {
+            color: #61afef;
+        }
+        
+        .code-block .string {
+            color: #98c379;
+        }
+        
+        .code-block .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+        
+        .code-block .number {
+            color: #d19a66;
+        }
+        
+        .try-it {
+            padding: 12px;
+            border-radius: 0 6px 6px 0;
+            margin: 15px 0;
+        }
+        
+        .try-it h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+        
+        .try-it h4 i {
+            margin-right: 6px;
+            color: #306998;
+            font-size: 16px;
+        }
+        
+        .run-btn {
+            background: #3776ab;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .output {
+            background: #282c34;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-family: monospace;
+            min-height: 40px;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+        
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        
+        .prev-btn {
+            background: transparent;
+            color: #3776ab;
+        }
+        
+        .next-btn {
+            background: linear-gradient(135deg, #3776ab, #306998);
+            color: white;
+        }
+        
+        .next-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .finish-btn {
+            background: #4cc9f0;
+            color: white;
+            display: none;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .content-area::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h2>3</h2>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 2</title>
-  <style>
-    body {
-      background-color: rgba(1, 1, 27, 1);
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-    button {
-      background-color: rgb(2, 2, 39);
-      border: 3px solid rgba(90, 100, 255, 1);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <h1>Lesson 2</h1>
-  <p>This is the content for Lesson 2.</p>
-  <button onclick="window.location.href='homepage.html'">Go to Homepage</button>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <img src="/images/codeigo-logo.png" alt="Codeigo Logo">
+                <span>Codeigo</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </header>
+        
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Step 1 -->
+            <div class="tutorial-step active" id="step1">
+                <h2 class="step-title">Conditional Statements <span class="step-badge">Lesson 3</span></h2>
+                <div class="step-content">
+                    <p>Conditional statements allow your program to make decisions based on certain conditions.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Basic if statement</span><br>
+                        age = 18<br>
+                        <span class="keyword">if</span> age >= 18:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"You are an adult"</span>)<br>
+                        <br>
+                        <span class="comment"># if-else statement</span><br>
+                        temperature = 30<br>
+                        <span class="keyword">if</span> temperature > 25:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"It's hot outside"</span>)<br>
+                        <span class="keyword">else</span>:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"It's not hot outside"</span>)<br>
+                        <br>
+                        <span class="comment"># if-elif-else statement</span><br>
+                        score = 85<br>
+                        <span class="keyword">if</span> score >= 90:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Grade: A"</span>)<br>
+                        <span class="keyword">elif</span> score >= 80:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Grade: B"</span>)<br>
+                        <span class="keyword">elif</span> score >= 70:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Grade: C"</span>)<br>
+                        <span class="keyword">else</span>:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">"Grade: D or F"</span>)
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-cog"></i> Exercise time</h4>
+                        <p>Write a program that checks if a number is positive, negative, or zero:</p>
+                        <div class="code-block" id="editableCode1" contenteditable="true">
+                            number = 7  <span class="comment"># Try changing this value</span><br>
+                            <span class="comment"># Your if-elif-else statement here</span>
+                        </div>
+                        <button class="run-btn" onclick="runCode(1)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="tutorial-step" id="step2">
+                <h2 class="step-title">While Loops</h2>
+                <div class="step-content">
+                    <p>While loops repeat a block of code as long as a condition is true.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Basic while loop</span><br>
+                        count = 0<br>
+                        <span class="keyword">while</span> count < 5:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">f"Count: {count}"</span>)<br>
+                        &nbsp;&nbsp;count += 1  <span class="comment"># Don't forget to update the counter!</span><br>
+                        <br>
+                        <span class="comment"># Loop with break</span><br>
+                        <span class="keyword">while</span> <span class="keyword">True</span>:<br>
+                        &nbsp;&nbsp;user_input = <span class="function">input</span>(<span class="string">"Enter 'quit' to exit: "</span>)<br>
+                        &nbsp;&nbsp;<span class="keyword">if</span> user_input == <span class="string">'quit'</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span><br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(<span class="string">f"You entered: {user_input}"</span>)<br>
+                        <br>
+                        <span class="comment"># Loop with continue</span><br>
+                        num = 0<br>
+                        <span class="keyword">while</span> num < 10:<br>
+                        &nbsp;&nbsp;num += 1<br>
+                        &nbsp;&nbsp;<span class="keyword">if</span> num % 2 == 0:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">continue</span>  <span class="comment"># Skip even numbers</span><br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(num)
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-flask"></i> Try It Yourself</h4>
+                        <p>Create a while loop that calculates the sum of numbers from 1 to 10:</p>
+                        <div class="code-block" id="editableCode2" contenteditable="true">
+                            total = 0<br>
+                            num = 1<br>
+                            <span class="comment"># Your while loop here</span><br>
+                            <span class="keyword">print</span>(<span class="string">f"Total sum: {total}"</span>)
+                        </div>
+                        <button class="run-btn" onclick="runCode(2)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output2"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="tutorial-step" id="step3">
+                <h2 class="step-title">For Loops</h2>
+                <div class="step-content">
+                    <p>For loops iterate over sequences (lists, strings, dictionaries, etc.)</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Iterate through a list</span><br>
+                        fruits = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>]<br>
+                        <span class="keyword">for</span> fruit <span class="keyword">in</span> fruits:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(fruit)<br>
+                        <br>
+                        <span class="comment"># Iterate through a string</span><br>
+                        <span class="keyword">for</span> char <span class="keyword">in</span> <span class="string">"Python"</span>:<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(char)<br>
+                        <br>
+                        <span class="comment"># range() function</span><br>
+                        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(5):  <span class="comment"># 0 to 4</span><br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(i)<br>
+                        <br>
+                        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(2, 6):  <span class="comment"># 2 to 5</span><br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(i)<br>
+                        <br>
+                        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(0, 10, 2):  <span class="comment"># 0 to 8, step 2</span><br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(i)
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-flask"></i> Try It Yourself</h4>
+                        <p>Use a for loop to calculate the factorial of 5 (5! = 5×4×3×2×1):</p>
+                        <div class="code-block" id="editableCode3" contenteditable="true">
+                            factorial = 1<br>
+                            <span class="comment"># Your for loop here</span><br>
+                            <span class="keyword">print</span>(<span class="string">f"5! = {factorial}"</span>)
+                        </div>
+                        <button class="run-btn" onclick="runCode(3)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="tutorial-step" id="step4">
+                <h2 class="step-title">Complete!</h2>
+                <div class="step-content">
+                    <div style="text-align: center; padding: 25px 0;">
+                        <i class="fas fa-trophy" style="font-size: 50px; color: #ffd43b; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 12px; color: #306998;">Python Control Flow Mastered!</h3>
+                        <p style="margin-bottom: 20px;">You've completed Lesson 3 on Python control flow and loops.</p>
+                        <button style="background: #3776ab; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;" onclick="window.location.href='/homepage.html'">
+                            Return to Homepage
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button class="nav-btn prev-btn" id="prevBtn" disabled>
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button class="nav-btn next-btn" id="nextBtn">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="nav-btn finish-btn" id="finishBtn">
+                Finish <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Tutorial Navigation
+        const steps = document.querySelectorAll('.tutorial-step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const progressBar = document.getElementById('progressBar');
+        let currentStep = 0;
+        
+        // Update progress
+        function updateProgress() {
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            prevBtn.disabled = currentStep === 0;
+            
+            if (currentStep === steps.length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                finishBtn.style.display = 'none';
+            }
+        }
+        
+        // Show current step
+        function showStep(stepIndex) {
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === stepIndex);
+            });
+            currentStep = stepIndex;
+            updateProgress();
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+        
+        // Event listeners
+        nextBtn.addEventListener('click', function() {
+            if (currentStep < steps.length - 1) {
+                showStep(currentStep + 1);
+            }
+        });
+        
+        prevBtn.addEventListener('click', function() {
+            if (currentStep > 0) {
+                showStep(currentStep - 1);
+            }
+        });
+        
+        finishBtn.addEventListener('click', function() {
+            window.location.href = '/homepage.html';
+        });
+        
+        // Simple code execution simulation
+        function runCode(stepNum) {
+            const outputElement = document.getElementById(`output${stepNum}`);
+            const codeElement = document.getElementById(`editableCode${stepNum}`);
+            
+            try {
+                const code = codeElement.innerText || codeElement.textContent;
+                
+                // Demo responses for different steps
+                if (stepNum === 1) {
+                    if (code.includes("if") && code.includes("elif") && code.includes("else")) {
+                        outputElement.innerHTML = "7 is positive";
+                    } else {
+                        outputElement.innerHTML = "Missing some conditions\n(Need if, elif, and else)";
+                    }
+                } 
+                else if (stepNum === 2) {
+                    if (code.includes("while") && code.includes("num <=") || code.includes("num < 11")) {
+                        outputElement.innerHTML = "Total sum: 55";
+                    } else {
+                        outputElement.innerHTML = "Total sum: 0\n(Your loop isn't summing correctly)";
+                    }
+                }
+                else if (stepNum === 3) {
+                    if (code.includes("for") && code.includes("range") && code.includes("factorial *=")) {
+                        outputElement.innerHTML = "5! = 120";
+                    } else {
+                        outputElement.innerHTML = "5! = 1\n(Your factorial calculation isn't working)";
+                    }
+                }
+                else {
+                    outputElement.innerHTML = "Code executed successfully!";
+                }
+            } catch (e) {
+                outputElement.innerHTML = `Error: ${e.message}`;
+            }
+        }
+        
+        // Initialize
+        showStep(0);
+    </script>
 </body>
 </html>

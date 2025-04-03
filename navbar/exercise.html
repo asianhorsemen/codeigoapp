@@ -50,44 +50,70 @@
 
 /* Navigation Bar */
 .navbar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background-color: rgb(38, 38, 150);
-    padding: 5px 0;
-    gap: 10px;
-    border-radius: 20px 20px 0 0;
-}
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background-color: rgba(1, 1, 27, 0.9);
+      padding: 12px 0;
+      gap: 5px;
+      z-index: 1000;
+      border-top: 1px solid rgba(90, 100, 255, 0.2);
+    }
 
-.navbar a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 50%;
-    transition: all 0.3s ease-in-out;
-}
+    .navbar a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
 
-.navbar a.active {
-    height: 30px;
-    background-color: rgba(1, 1, 27, 1);
-    transform: translateY(-20px) scale(1.2);
-}
+    .navbar a:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
 
-.navbar a.active svg {
-    color: white;
-    transform: scale(1.2);
-}
+    .navbar a.active {
+      color: white;
+      background: rgba(90, 100, 255, 0.2);
+      transform: translateY(-10px);
+    }
 
-.navbar a.active span {
-    color: rgba(1, 1, 27, 1);
-}
+    .navbar a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      background-color: rgba(90, 100, 255, 1);
+      border-radius: 50%;
+    }
+
+    .navbar a i {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar a.active i {
+      transform: scale(1.2);
+      color: rgba(90, 100, 255, 1);
+    }
+
+    .navbar a span {
+      font-size: 0.7rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
 
 /* Sections */
 .section {
@@ -322,26 +348,17 @@ button.run-button:active {
         padding: 5px;
     }
 
-    .navbar {
-        gap: 5px;
-    }
-
-    .navbar svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    .navbar span {
-        font-size: 10px;
-    }
-
-    .navbar a.active {
-        transform: translateY(-15px) scale(1.1);
-    }
-
-    .navbar a.active svg {
-        transform: scale(1.1);
-    }
+    .navbar a {
+        padding: 5px 8px;
+      }
+      
+      .navbar a i {
+        font-size: 1.2rem;
+      }
+      
+      .navbar a span {
+        font-size: 0.6rem;
+      }
 }
   </style>
 </head>

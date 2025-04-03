@@ -208,44 +208,71 @@
   }
 
   .navbar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background-color: rgb(38, 38, 150);
-    padding: 10px 0;
-    gap: 10px;
-    border-radius: 20px 20px 0 0;
-  }
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background-color: rgba(1, 1, 27, 0.9);
+      padding: 12px 0;
+      gap: 5px;
+      z-index: 1000;
+      border-top: 1px solid rgba(90, 100, 255, 0.2);
+    }
 
-  .navbar a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 50%;
-    transition: all 0.3s ease-in-out;
-  }
+    .navbar a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
 
-  .navbar a.active {
-    height: 30px;
-    background-color: rgba(1, 1, 27, 1);
-    transform: translateY(-20px) scale(1.2);
-  }
+    .navbar a:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
 
-  .navbar a.active svg {
-    color: white;
-    transform: scale(1.2);
-  }
+    .navbar a.active {
+      color: white;
+      background: rgba(90, 100, 255, 0.2);
+      transform: translateY(-10px);
+    }
 
-  .navbar a.active span {
-    color: rgba(1, 1, 27, 1);
-  }
+    .navbar a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      background-color: rgba(90, 100, 255, 1);
+      border-radius: 50%;
+    }
+
+    .navbar a i {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar a.active i {
+      transform: scale(1.2);
+      color: rgba(90, 100, 255, 1);
+    }
+
+    .navbar a span {
+      font-size: 0.7rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
 
   /* Animation for the active icon */
   @keyframes iconBounce {
@@ -306,9 +333,15 @@
   font-size: 16px;
 }
 
+
+
 .homepage-header img {
-  height: 35px;
-  width: 35px;
+  height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(90, 100, 255, 1);
+      transition: transform 0.3s ease;
 }
 
 .editor-container,
@@ -336,18 +369,17 @@ textarea {
   padding: 8px 12px;
 }
 
-.navbar {
-      gap: 5px;
-    }
-
-    .navbar svg {
-      width: 28px;
-      height: 28px;
-    }
-
-    .navbar span {
-      font-size: 10px;
-    }
+.navbar a {
+        padding: 5px 8px;
+      }
+      
+      .navbar a i {
+        font-size: 1.2rem;
+      }
+      
+      .navbar a span {
+        font-size: 0.6rem;
+      }
 
 .modal-content {
   width: 90%;
@@ -361,20 +393,19 @@ textarea {
   <div class="sticky">
     <div class="homepage-header">
       <div class="header-left">
-        <img src="/images/codeigo-logo.png" alt="Logo">
+        <img src="/images/codeigo-logo.png" alt="CodeIgo Logo">
         <h1>CODEIGO</h1>
       </div>
       <i data-lucide="user" class="profile-icon"></i>
     </div>
 
-    <div class="navbar">
-      <a href="/homepage.html" ><i data-lucide="home"></i> <span>Home</span></a>
-      <a href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
-      <a class="active" href="interpreter.html" onclick="showSection('compiler')"><i data-lucide="code"></i> <span>Compiler</span></a>
-      <a href="games.html" onclick="showSection('games')"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
-      <a href="exercise.html" onclick="showSection('exercise')"><i data-lucide="book-open"></i>
-        <span>Exercise</span></a>
-    </div>
+    <nav class="navbar">
+      <a href="/homepage.html"><i data-lucide="home"></i> <span>Home</span></a>
+      <a  href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
+      <a class="active" href="interpreter.html"><i data-lucide="code"></i> <span>Compiler</span></a>
+      <a href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
+      <a href="exercise.html"><i data-lucide="book-open"></i> <span>Exercise</span></a>
+    </nav>
 
 
   <!-- Navigation Bar 

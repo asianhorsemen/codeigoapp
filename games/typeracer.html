@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=600, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Python Code Typing Race</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Source Code Pro', monospace;
+            width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: rgba(1, 1, 27, 1);
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        /* Particle canvas */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .game-container {
+            background-color: rgba(15, 15, 35, 0.85);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.3);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            width: 100%;
+        }
+        
+        .code-display {
+            background-color: rgba(40, 44, 52, 0.9);
+            color: #abb2bf;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.4;
+            tab-size: 4;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(100, 149, 237, 0.1);
+            font-size: 14px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .input-area {
+            width: 100%;
+            height: 120px;
+            font-family: 'Source Code Pro', monospace;
+            padding: 10px;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            border-radius: 5px;
+            resize: none;
+            margin-bottom: 12px;
+            background-color: rgba(30, 30, 50, 0.7);
+            color: white;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            font-size: 14px;
+        }
+        
+        .input-area:focus {
+            outline: none;
+            border-color: rgba(100, 149, 237, 0.7);
+            box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            justify-content: space-between;
+        }
+        
+        .stat-box {
+            background-color: rgba(10, 10, 30, 0.7);
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: calc(25% - 8px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-size: 13px;
+        }
+        
+        button {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-grow: 1;
+            min-width: calc(33% - 8px);
+        }
+        
+        button:hover, button:active {
+            background-color: rgba(69, 160, 73, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
+        .correct {
+            color: #4CAF50;
+            text-shadow: 0 0 3px rgba(76, 175, 80, 0.5);
+        }
+        
+        .incorrect {
+            color: #f44336;
+            text-decoration: underline;
+            text-shadow: 0 0 3px rgba(244, 67, 54, 0.5);
+        }
+        
+        .current {
+            background-color: rgba(62, 68, 81, 0.7);
+            box-shadow: 0 0 8px rgba(100, 149, 237, 0.5);
+            border-radius: 2px;
+        }
+        
+        .keyword {
+            color: #c678dd;
+            font-weight: bold;
+        }
+        
+        .number {
+            color: #d19a66;
+        }
+        
+        .string {
+            color: #98c379;
+        }
+        
+        .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+        
+        .title {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px rgba(100, 149, 237, 0.7);
+            position: relative;
+            font-size: 22px;
+        }
+        
+        .title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(100, 149, 237, 0.7), transparent);
+            margin: 8px auto;
+        }
+        
+        .instructions {
+            background-color: rgba(25, 25, 60, 0.7);
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid rgba(100, 149, 237, 0.7);
+            box-shadow: 0 0 12px rgba(0,0,0,0.2);
+            font-size: 13px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: space-between;
+        }
+        
+        /* Animation for completed code */
+        @keyframes celebration {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        
+        .celebrate {
+            animation: celebration 0.4s ease;
+        }
+        
+        /* Glow effect for stats */
+        .stat-box div:last-child {
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(100, 149, 237, 0.7);
+            font-size: 14px;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (width: 600px) {
+            body {
+                width: 100%;
+                padding: 10px;
+            }
+            
+            .game-container {
+                padding: 12px;
+            }
+            
+            .code-display {
+                font-size: 13px;
+                padding: 10px;
+            }
+            
+            .input-area {
+                height: 100px;
+                font-size: 13px;
+            }
+            
+            .stat-box {
+                min-width: calc(50% - 6px);
+                font-size: 12px;
+            }
+            
+            button {
+                min-width: calc(50% - 6px);
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+            
+            .title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Prevent zooming on mobile */
+        input, textarea {
+            font-size: 16px !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <div class="game-container">
+        <h1 class="title">Python Code Typing Race</h1>
+        
+        <div class="instructions">
+            <p><strong>How to play:</strong> Type the Python code as fast and accurately as you can. Correct characters turn green, mistakes turn red.</p>
+            <p><strong>Tip:</strong> Pay attention to indentation - it matters in Python!</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div>Time:</div>
+                <div id="time">0.00s</div>
+            </div>
+            <div class="stat-box">
+                <div>Accuracy:</div>
+                <div id="accuracy">100%</div>
+            </div>
+            <div class="stat-box">
+                <div>Progress:</div>
+                <div id="progress">0%</div>
+            </div>
+            <div class="stat-box">
+                <div>WPM:</div>
+                <div id="wpm">0</div>
+            </div>
+        </div>
+        
+        <div class="code-display" id="code-display"></div>
+        
+        <textarea class="input-area" id="code-input" placeholder="Start typing the code here..." spellcheck="false"></textarea>
+        
+        <div class="controls">
+            <button id="new-code-btn">New Code</button>
+            <button id="restart-btn">Restart</button>
+            <button id="hint-btn">Show Hint</button>
+        </div>
+    </div>
+
+    <!-- Include particles.js library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // Enhanced Python code snippets (shorter for mobile)
+        const codeSnippets = [
+            {
+                code: `def greet(name):
+    return f"Hello, {name}!"`,
+                hint: "This function returns a greeting message."
+            },
+            
+            {
+                code: `def sum_numbers(a, b):
+    return a + b`,
+                hint: "This function adds two numbers together."
+            },
+            
+            {
+                code: `for i in range(5):
+    print(i * 2)`,
+                hint: "This loop prints the first 5 even numbers."
+            },
+            
+            {
+                code: `def is_even(num):
+    return num % 2 == 0`,
+                hint: "This function checks if a number is even."
+            },
+            
+            {
+                code: `numbers = [1, 2, 3]
+squared = [n**2 for n in numbers]`,
+                hint: "This creates a list of squared numbers."
+            },
+            
+            {
+                code: `def reverse_string(s):
+    return s[::-1]`,
+                hint: "This function reverses a string."
+            }
+        ];
+
+        // DOM elements
+        const codeDisplay = document.getElementById('code-display');
+        const codeInput = document.getElementById('code-input');
+        const timeDisplay = document.getElementById('time');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const progressDisplay = document.getElementById('progress');
+        const wpmDisplay = document.getElementById('wpm');
+        const newCodeBtn = document.getElementById('new-code-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const hintBtn = document.getElementById('hint-btn');
+
+        // Game state
+        let currentCode = '';
+        let currentHint = '';
+        let startTime = null;
+        let timerInterval = null;
+        let correctChars = 0;
+        let totalChars = 0;
+        let lastWordCountTime = 0;
+        let wordCounts = [];
+        let completed = false;
+
+        // Initialize particles.js (lighter for mobile)
+        function initParticles() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": {
+                        "value": 40,
+                        "density": {
+                            "enable": true,
+                            "value_area": 600
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.4,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 2.5,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 2,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 120,
+                        "color": "#6495ed",
+                        "opacity": 0.15,
+                        "width": 0.8
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 0.8,
+                        "direction": "none",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 120,
+                            "line_linked": {
+                                "opacity": 0.3
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 3
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        }
+
+        // Initialize the game
+        function initGame() {
+            // Select random code snippet
+            const randomSnippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            currentCode = randomSnippet.code;
+            currentHint = randomSnippet.hint;
+            
+            // Display the code with syntax highlighting
+            displayCode(currentCode);
+            
+            // Reset stats
+            correctChars = 0;
+            totalChars = currentCode.length;
+            wordCounts = [];
+            completed = false;
+            updateStats();
+            
+            // Clear input and focus
+            codeInput.value = '';
+            codeInput.focus();
+            
+            // Reset timer
+            if (timerInterval) clearInterval(timerInterval);
+            startTime = null;
+            lastWordCountTime = 0;
+            timeDisplay.textContent = '0.00s';
+            wpmDisplay.textContent = '0';
+        }
+
+        // Display code with syntax highlighting
+        function displayCode(code) {
+            // Enhanced syntax highlighting
+            let highlighted = code
+                .replace(/(def|class|if|else|elif|for|while|return|print|range|import|from|as|try|except|finally|with|lambda)\b/g, '<span class="keyword">$1</span>')
+                .replace(/(\b\d+\.?\d*\b)/g, '<span class="number">$1</span>')
+                .replace(/(["'].*?["'])/g, '<span class="string">$1</span>')
+                .replace(/(#.*$)/gm, '<span class="comment">$1</span>');
+            
+            codeDisplay.innerHTML = highlighted;
+        }
+
+        // Calculate words per minute
+        function calculateWPM(charsTyped, timeInMinutes) {
+            // Average word length in programming is about 5 characters
+            const words = charsTyped / 5;
+            return Math.round(words / timeInMinutes);
+        }
+
+        // Update game stats
+        function updateStats() {
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
+            accuracyDisplay.textContent = `${accuracy}%`;
+            
+            const progress = totalChars > 0 ? Math.round((codeInput.value.length / totalChars) * 100) : 0;
+            progressDisplay.textContent = `${progress}%`;
+            
+            // Update WPM every 5 seconds
+            if (startTime) {
+                const currentTime = Date.now();
+                const elapsedMinutes = (currentTime - startTime) / 60000;
+                
+                if (currentTime - lastWordCountTime > 5000) {
+                    const currentWPM = calculateWPM(codeInput.value.length, elapsedMinutes);
+                    wordCounts.push(currentWPM);
+                    wpmDisplay.textContent = currentWPM;
+                    lastWordCountTime = currentTime;
+                }
+            }
+        }
+
+        // Show hint
+        function showHint() {
+            alert(currentHint);
+        }
+
+        // Celebration effect when code is completed
+        function celebrateCompletion() {
+            if (completed) return;
+            
+            completed = true;
+            codeDisplay.classList.add('celebrate');
+            
+            // Create some additional particles for celebration
+            if (window.pJSDom && window.pJSDom.length > 0) {
+                const pJS = window.pJSDom[0].pJS;
+                for (let i = 0; i < 20; i++) {
+                    pJS.particles.array.push(
+                        pJS.particles._push(
+                            pJS.particles.array.length,
+                            {
+                                x: Math.random() * pJS.canvas.w,
+                                y: Math.random() * pJS.canvas.h
+                            }
+                        )
+                    );
+                }
+            }
+            
+            setTimeout(() => {
+                codeDisplay.classList.remove('celebrate');
+            }, 800);
+        }
+
+        // Handle input changes
+        codeInput.addEventListener('input', (e) => {
+            if (!startTime) {
+                startTime = Date.now();
+                lastWordCountTime = startTime;
+                timerInterval = setInterval(() => {
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    timeDisplay.textContent = `${elapsed.toFixed(2)}s`;
+                    updateStats();
+                }, 100);
+            }
+            
+            const input = e.target.value;
+            const original = currentCode;
+            
+            // Calculate correct characters
+            correctChars = 0;
+            for (let i = 0; i < input.length; i++) {
+                if (i < original.length && input[i] === original[i]) {
+                    correctChars++;
+                }
+            }
+            
+            updateStats();
+            
+            // Check if code is completed
+            if (input === original) {
+                celebrateCompletion();
+            }
+            
+            // Highlight the code display based on input
+            let displayHTML = '';
+            for (let i = 0; i < original.length; i++) {
+                let char = original[i];
+                
+                if (i < input.length) {
+                    if (input[i] === char) {
+                        displayHTML += `<span class="correct">${char}</span>`;
+                    } else {
+                        displayHTML += `<span class="incorrect">${char}</span>`;
+                    }
+                } else if (i === input.length) {
+                    displayHTML += `<span class="current">${char}</span>`;
+                } else {
+                    // Apply syntax highlighting to remaining characters
+                    if (char === '\n') {
+                        displayHTML += char;
+                    } else if (original.substring(i).match(/^(def|class|if|else|elif|for|while|return|print|range|import|from|as|try|except|finally|with|lambda)\b/)) {
+                        const keywordMatch = original.substring(i).match(/^(def|class|if|else|elif|for|while|return|print|range|import|from|as|try|except|finally|with|lambda)\b/);
+                        const keyword = keywordMatch[0];
+                        displayHTML += `<span class="keyword">${keyword}</span>`;
+                        i += keyword.length - 1;
+                    } else if (original.substring(i).match(/^\d+\.?\d*\b/)) {
+                        const numberMatch = original.substring(i).match(/^\d+\.?\d*\b/);
+                        const number = numberMatch[0];
+                        displayHTML += `<span class="number">${number}</span>`;
+                        i += number.length - 1;
+                    } else if (original.substring(i).match(/^["'].*?["']/)) {
+                        const stringMatch = original.substring(i).match(/^["'].*?["']/);
+                        const string = stringMatch[0];
+                        displayHTML += `<span class="string">${string}</span>`;
+                        i += string.length - 1;
+                    } else if (original.substring(i).match(/^#.*$/m)) {
+                        const commentMatch = original.substring(i).match(/^#.*$/m);
+                        const comment = commentMatch[0];
+                        displayHTML += `<span class="comment">${comment}</span>`;
+                        i += comment.length - 1;
+                    } else {
+                        displayHTML += char;
+                    }
+                }
+            }
+            
+            codeDisplay.innerHTML = displayHTML;
+        });
+
+        // Button event listeners
+        newCodeBtn.addEventListener('click', initGame);
+        newCodeBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            initGame();
+        });
+        
+        restartBtn.addEventListener('click', () => {
+            codeInput.value = '';
+            codeInput.focus();
+            if (timerInterval) clearInterval(timerInterval);
+            startTime = null;
+            timeDisplay.textContent = '0.00s';
+            correctChars = 0;
+            wordCounts = [];
+            wpmDisplay.textContent = '0';
+            completed = false;
+            updateStats();
+            displayCode(currentCode);
+        });
+        restartBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            codeInput.value = '';
+            codeInput.focus();
+            if (timerInterval) clearInterval(timerInterval);
+            startTime = null;
+            timeDisplay.textContent = '0.00s';
+            correctChars = 0;
+            wordCounts = [];
+            wpmDisplay.textContent = '0';
+            completed = false;
+            updateStats();
+            displayCode(currentCode);
+        });
+        
+        hintBtn.addEventListener('click', showHint);
+        hintBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            showHint();
+        });
+
+        // Initialize the game when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            initGame();
+            initParticles();
+        });
+
+        // Prevent tab from leaving the textarea (for indentation)
+        codeInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                
+                // Insert tab character
+                this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+                
+                // Move cursor position
+                this.selectionStart = this.selectionEnd = start + 4;
+                
+                // Trigger input event
+                const event = new Event('input', { bubbles: true });
+                this.dispatchEvent(event);
+            }
+        });
+
+        // Handle window resize for particles
+        window.addEventListener('resize', () => {
+            if (window.pJSDom && window.pJSDom.length > 0) {
+                window.pJSDom[0].pJS.fn.vendors.resize();
+            }
+        });
+
+        // Prevent zooming on mobile
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) { e.preventDefault(); }
+        }, { passive: false });
+
+        // Focus the input area when tapping anywhere on the game container
+        document.querySelector('.game-container').addEventListener('touchend', function() {
+            document.getElementById('code-input').focus();
+        });
+    </script>
+</body>
+</html>

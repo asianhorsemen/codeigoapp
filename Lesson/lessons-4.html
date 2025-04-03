@@ -1,29 +1,558 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lesson 2</title>
-  <style>
-    body {
-      background-color: rgba(1, 1, 27, 1);
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-    button {
-      background-color: rgb(2, 2, 39);
-      border: 3px solid rgba(90, 100, 255, 1);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Mobile Tutor - Lesson 4</title>
+    <style>
+             * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: rgba(1, 1, 27, 1);
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+            width: 600px;
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Header */
+        .app-header {
+            background-color: rgba(1, 1, 27, 1);
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 40px;
+        }
+        
+        .logo span {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 3px;
+            background-color: blue;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: rgba(90, 100, 255, 1);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .tutorial-step {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tutorial-step.active {
+            display: block;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .step-badge {
+            background: #ffd43b;
+            color: #306998;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+
+        .step-content p {
+            color: white;
+        }
+        
+        .step-content {
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .step-image {
+            width: 100%;
+            height: 150px;
+            background: #eee;
+            border-radius: 6px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+            overflow: hidden;
+        }
+        
+        .code-block {
+            background: #282c34;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 12px 0;
+            overflow-x: auto;
+            color: #abb2bf;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .code-block .language {
+            position: absolute;
+            top: 3px;
+            right: 8px;
+            color: #7f848e;
+            font-size: 10px;
+        }
+        
+        .code-block .keyword {
+            color: #c678dd;
+        }
+        
+        .code-block .function {
+            color: #61afef;
+        }
+        
+        .code-block .string {
+            color: #98c379;
+        }
+        
+        .code-block .comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+        
+        .code-block .number {
+            color: #d19a66;
+        }
+        
+        .try-it {
+            padding: 12px;
+            border-radius: 0 6px 6px 0;
+            margin: 15px 0;
+        }
+        
+        .try-it h4 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+        
+        .try-it h4 i {
+            margin-right: 6px;
+            color: #306998;
+            font-size: 16px;
+        }
+        
+        .run-btn {
+            background: #3776ab;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .output {
+            background: #282c34;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-family: monospace;
+            min-height: 40px;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+        
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        
+        .prev-btn {
+            background: transparent;
+            color: #3776ab;
+        }
+        
+        .next-btn {
+            background: linear-gradient(135deg, #3776ab, #306998);
+            color: white;
+        }
+        
+        .next-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .finish-btn {
+            background: #4cc9f0;
+            color: white;
+            display: none;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .content-area::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <h1>Lesson 2</h1>
-  <p>This is the content for Lesson 2.</p>
-  <button onclick="window.location.href='homepage.html'">Go to Homepage</button>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <img src="/images/codeigo-logo.png" alt="Codeigo Logo">
+                <span>Codeigo</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </header>
+        
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Step 1 -->
+            <div class="tutorial-step active" id="step1">
+                <h2 class="step-title">Python Modules <span class="step-badge">Lesson 4</span></h2>
+                <div class="step-content">
+                    <p>Modules are Python files containing reusable code. Python comes with many built-in modules, and you can create your own.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Importing entire module</span><br>
+                        <span class="keyword">import</span> math<br>
+                        <span class="keyword">print</span>(math.sqrt(16))  <span class="comment"># 4.0</span><br>
+                        <br>
+                        <span class="comment"># Importing specific functions</span><br>
+                        <span class="keyword">from</span> random <span class="keyword">import</span> randint<br>
+                        <span class="keyword">print</span>(<span class="function">randint</span>(1, 10))  <span class="comment"># Random number between 1-10</span><br>
+                        <br>
+                        <span class="comment"># Creating your own module</span><br>
+                        <span class="comment"># Save this as mymodule.py</span><br>
+                        <span class="keyword">def</span> <span class="function">greet</span>(name):<br>
+                        &nbsp;&nbsp;<span class="keyword">return</span> <span class="string">f"Hello, {name}!"</span><br>
+                        <br>
+                        <span class="comment"># Then import it</span><br>
+                        <span class="keyword">import</span> mymodule<br>
+                        <span class="keyword">print</span>(mymodule.greet(<span class="string">"Alice"</span>))
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-cog"></i> Exercise time</h4>
+                        <p>Use the datetime module to print today's date:</p>
+                        <div class="code-block" id="editableCode1" contenteditable="true">
+                            <span class="comment"># Import the datetime module</span><br>
+                            <span class="comment"># Your code here</span>
+                        </div>
+                        <button class="run-btn" onclick="runCode(1)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="tutorial-step" id="step2">
+                <h2 class="step-title">File Handling</h2>
+                <div class="step-content">
+                    <p>Python makes it easy to work with files for reading and writing data.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Writing to a file</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">"example.txt"</span>, <span class="string">"w"</span>) <span class="keyword">as</span> file:<br>
+                        &nbsp;&nbsp;file.write(<span class="string">"Hello, World!\n"</span>)<br>
+                        &nbsp;&nbsp;file.write(<span class="string">"This is a second line."</span>)<br>
+                        <br>
+                        <span class="comment"># Reading from a file</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">"example.txt"</span>, <span class="string">"r"</span>) <span class="keyword">as</span> file:<br>
+                        &nbsp;&nbsp;content = file.read()<br>
+                        &nbsp;&nbsp;<span class="keyword">print</span>(content)<br>
+                        <br>
+                        <span class="comment"># Reading line by line</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">"example.txt"</span>, <span class="string">"r"</span>) <span class="keyword">as</span> file:<br>
+                        &nbsp;&nbsp;<span class="keyword">for</span> line <span class="keyword">in</span> file:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(line.strip())  <span class="comment"># strip() removes newline characters</span>
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-flask"></i> Try It Yourself</h4>
+                        <p>Create a program that writes three favorite foods to a file and then reads them back:</p>
+                        <div class="code-block" id="editableCode2" contenteditable="true">
+                            <span class="comment"># Write foods to file</span><br>
+                            foods = [<span class="string">"Pizza"</span>, <span class="string">"Sushi"</span>, <span class="string">"Tacos"</span>]<br>
+                            <span class="comment"># Your code here</span><br>
+                            <br>
+                            <span class="comment"># Read and print foods from file</span><br>
+                            <span class="comment"># Your code here</span>
+                        </div>
+                        <button class="run-btn" onclick="runCode(2)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output2"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="tutorial-step" id="step3">
+                <h2 class="step-title">Working with CSV and JSON</h2>
+                <div class="step-content">
+                    <p>Python has excellent support for working with structured data formats.</p>
+                    
+                    <div class="code-block">
+                        <span class="language">python</span>
+                        <span class="comment"># Working with CSV files</span><br>
+                        <span class="keyword">import</span> csv<br>
+                        <br>
+                        <span class="comment"># Writing CSV</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.csv'</span>, <span class="string">'w'</span>, newline=<span class="string">''</span>) <span class="keyword">as</span> file:<br>
+                        &nbsp;&nbsp;writer = csv.writer(file)<br>
+                        &nbsp;&nbsp;writer.writerow([<span class="string">"Name"</span>, <span class="string">"Age"</span>, <span class="string">"City"</span>])<br>
+                        &nbsp;&nbsp;writer.writerow([<span class="string">"Alice"</span>, <span class="number">25</span>, <span class="string">"New York"</span>])<br>
+                        &nbsp;&nbsp;writer.writerow([<span class="string">"Bob"</span>, <span class="number">30</span>, <span class="string">"Chicago"</span>])<br>
+                        <br>
+                        <span class="comment"># Reading CSV</span><br>
+                        <span class="keyword">with</span> <span class="function">open</span>(<span class="string">'data.csv'</span>, <span class="string">'r'</span>) <span class="keyword">as</span> file:<br>
+                        &nbsp;&nbsp;reader = csv.reader(file)<br>
+                        &nbsp;&nbsp;<span class="keyword">for</span> row <span class="keyword">in</span> reader:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">print</span>(row)<br>
+                        <br>
+                        <span class="comment"># Working with JSON</span><br>
+                        <span class="keyword">import</span> json<br>
+                        <br>
+                        <span class="comment"># Convert Python dict to JSON</span><br>
+                        data = {<span class="string">"name"</span>: <span class="string">"Alice"</span>, <span class="string">"age"</span>: <span class="number">25</span>, <span class="string">"city"</span>: <span class="string">"New York"</span>}<br>
+                        json_data = json.dumps(data)<br>
+                        <span class="keyword">print</span>(json_data)<br>
+                        <br>
+                        <span class="comment"># Convert JSON to Python dict</span><br>
+                        python_dict = json.loads(json_data)<br>
+                        <span class="keyword">print</span>(python_dict[<span class="string">"name"</span>])
+                    </div>
+                    
+                    <div class="try-it">
+                        <h4><i class="fas fa-flask"></i> Try It Yourself</h4>
+                        <p>Create a dictionary of book data, convert it to JSON, and save to a file:</p>
+                        <div class="code-block" id="editableCode3" contenteditable="true">
+                            <span class="keyword">import</span> json<br>
+                            <br>
+                            book = {<br>
+                            &nbsp;&nbsp;<span class="string">"title"</span>: <span class="string">"Python Basics"</span>,<br>
+                            &nbsp;&nbsp;<span class="string">"author"</span>: <span class="string">"John Doe"</span>,<br>
+                            &nbsp;&nbsp;<span class="string">"year"</span>: <span class="number">2023</span>,<br>
+                            &nbsp;&nbsp;<span class="string">"topics"</span>: [<span class="string">"programming"</span>, <span class="string">"python"</span>, <span class="string">"beginners"</span>]<br>
+                            }<br>
+                            <br>
+                            <span class="comment"># Convert to JSON and save to file</span><br>
+                            <span class="comment"># Your code here</span>
+                        </div>
+                        <button class="run-btn" onclick="runCode(3)"><i class="fas fa-play"></i> Run Code</button>
+                        <div class="output" id="output3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="tutorial-step" id="step4">
+                <h2 class="step-title">Complete!</h2>
+                <div class="step-content">
+                    <div style="text-align: center; padding: 25px 0;">
+                        <i class="fas fa-trophy" style="font-size: 50px; color: #ffd43b; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 12px; color: #306998;">Python Modules & File Handling Mastered!</h3>
+                        <p style="margin-bottom: 20px;">You've completed Lesson 4 on Python modules and file handling.</p>
+                        <button style="background: #3776ab; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px;" onclick="window.location.href='/homepage.html'">
+                            Continue to Lesson 5 (Projects)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <button class="nav-btn prev-btn" id="prevBtn" disabled>
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button class="nav-btn next-btn" id="nextBtn">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="nav-btn finish-btn" id="finishBtn">
+                Finish <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // (Same JavaScript as previous lessons)
+        const steps = document.querySelectorAll('.tutorial-step');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const progressBar = document.getElementById('progressBar');
+        let currentStep = 0;
+        
+        function updateProgress() {
+            const progress = ((currentStep + 1) / steps.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            prevBtn.disabled = currentStep === 0;
+            
+            if (currentStep === steps.length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                finishBtn.style.display = 'none';
+            }
+        }
+        
+        function showStep(stepIndex) {
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === stepIndex);
+            });
+            currentStep = stepIndex;
+            updateProgress();
+            document.querySelector('.content-area').scrollTop = 0;
+        }
+        
+        nextBtn.addEventListener('click', function() {
+            if (currentStep < steps.length - 1) {
+                showStep(currentStep + 1);
+            }
+        });
+        
+        prevBtn.addEventListener('click', function() {
+            if (currentStep > 0) {
+                showStep(currentStep - 1);
+            }
+        });
+        
+        finishBtn.addEventListener('click', function() {
+            window.location.href = '/homepage.html';
+        });
+        
+        function runCode(stepNum) {
+            const outputElement = document.getElementById(`output${stepNum}`);
+            const codeElement = document.getElementById(`editableCode${stepNum}`);
+            
+            try {
+                const code = codeElement.innerText || codeElement.textContent;
+                
+                if (stepNum === 1) {
+                    if (code.includes("import datetime") && code.includes("datetime.date.today()")) {
+                        outputElement.innerHTML = "Today's date: [current date]";
+                    } else {
+                        outputElement.innerHTML = "Error: Need to import datetime and use datetime.date.today()";
+                    }
+                } 
+                else if (stepNum === 2) {
+                    if (code.includes("open('foods.txt', 'w')") && code.includes("open('foods.txt', 'r')")) {
+                        outputElement.innerHTML = "Pizza\nSushi\nTacos";
+                    } else {
+                        outputElement.innerHTML = "Error: Need to properly write and read from file";
+                    }
+                }
+                else if (stepNum === 3) {
+                    if (code.includes("json.dump(book, file)")) {
+                        outputElement.innerHTML = "JSON file created successfully!";
+                    } else {
+                        outputElement.innerHTML = "Error: Need to use json.dump() to save to file";
+                    }
+                }
+                else {
+                    outputElement.innerHTML = "Code executed successfully!";
+                }
+            } catch (e) {
+                outputElement.innerHTML = `Error: ${e.message}`;
+            }
+        }
+        
+        showStep(0);
+    </script>
 </body>
 </html>

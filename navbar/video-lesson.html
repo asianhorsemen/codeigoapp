@@ -5,347 +5,673 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/lucide-icons@0.0.103/dist/lucide.min.css" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <title>Video Lessons</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <title>Interactive Video Lessons</title>
   <style>
-    html,
-body {
-    overflow-x: hidden;
-
-}
-
-
-
-body {
-    margin: 0;
-    padding: 0;
-    background-color: rgba(1, 1, 27, 1);
-    color: white;
-    font-family: monospace;
-}
-
-.video-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 85%;
-    padding: 20px;
-    position: fixed;
-    margin: 0 auto;
-}
-
-.video-header i {
-    font-size: 20px;
-    color: white;
-    margin-right: 20px;
-    cursor: pointer;
-}
-
-.video-header h2 {
-    font-size: 20px;
-    margin: 0;
-    flex-grow: 1;
-    text-align: center;
-}
-
-.video-container {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background-color: rgba(1, 1, 27, 0.95);
-    padding: 10px;
-    border-radius: 20px;
-    box-shadow: 0px 0px 15px rgba(159, 165, 255, 0.5);
-}
-
-.video-player {
-    border-radius: 20px;
-    width: 360px;
-    max-width: 800px;
-    margin-bottom: 20px;
-}
-
-.video-button button {
-    position: relative;
-    top: 350px;
-    background-color: rgb(2, 2, 39);
-    border-radius: 20px;
-    border: 1px rgba(90, 100, 255, 1) solid;
-    box-shadow: 0px 0px 10px rgba(159, 165, 255, 0.5);
-    color: white;
-    font-family: monospace;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 10px;
-    height: 75px;
-    text-align: left;
-    padding: 10px;
-    width: 95%;
-    cursor: pointer;
-}
-
-.video-button button:disabled {
-    background-color: rgba(0, 0, 10, 0.911);
-    color: #A1A1A1;
-    cursor: not-allowed;
-    transform: scale(0.98);
-}
-
-.icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-}
-
-.lock-icon {
-    color: rgba(255, 0, 0, 0.8);
-}
-
-.play-icon {
-    color: rgba(0, 255, 0, 0.8);
-}
-
-.sticky {
-    position: fixed;
-    width: 100%;
-    z-index: 300;
-}
-
-/* Header */
-.homepage-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: rgba(1, 1, 27, 1);
-    padding: 10px;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.homepage-header img {
-    height: 40px;
-    width: 40px;
-}
-
-.homepage-header h1 {
-    margin: 0;
-    font-size: 18px;
-}
-
-/* Profile Icon */
-.profile-icon {
-    cursor: pointer;
-    margin-right: 15px;
-}
-
-.navbar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background-color: rgb(38, 38, 150);
-    padding: 5px 0;
-    z-index: 20;
-    gap: 10px;
-    border-radius: 20px 20px 0 0;
-}
-
-.navbar a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 50%;
-    transition: all 0.3s ease-in-out;
-}
-
-.navbar a.active {
-    height: 30px;
-    background-color: rgba(1, 1, 27, 1);
-    transform: translateY(-20px) scale(1.2);
-    /* Move up and scale */
-}
-
-.navbar a.active svg {
-    color: white;
-    transform: scale(1.2);
-    /* Scale the icon */
-}
-
-.navbar a.active span {
-    color: rgba(1, 1, 27, 1);
-}
-
-/* Animation for the active icon */
-@keyframes iconBounce {
-    0% {
-        transform: translateY(0) scale(1);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    50% {
-        transform: translateY(-10px) scale(1.2);
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background-color: rgba(1, 1, 27, 1);
+      color: rgba(255, 255, 255, 0.9);
+      overflow-x: hidden;
+      min-height: 100vh;
     }
 
-    100% {
-        transform: translateY(-20px) scale(1.2);
-    }
-}
-
-.navbar a.active {
-    animation: iconBounce 0.5s ease-in-out;
-}
-
-/* Sections */
-.section {
-    display: none;
-    padding: 20px;
-    text-align: center;
-}
-
-.active-section {
-    display: block;
-}
-
-/* Media Queries for Mobile */
-@media (max-width: 600px) {
-    .video-container {
-        top: 90px;
-        width: 90%;
+    /* Header Styles */
+    .sticky-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: rgba(1, 1, 27, 0.8);
+      border-bottom: 1px solid rgba(90, 100, 255, 0.2);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
     }
 
-    .video-player {
-        width: 100%;
+    .homepage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    .video-button button {
-        top: 250px;
-        font-size: 16px;
-        height: 60px;
-        padding: 8px;
-    }
-
-    .video-button button span {
-        font-size: 35px;
-    }
-
-    .navbar {
-        gap: 5px;
-    }
-
-    .navbar svg {
-        width: 28px;
-        height: 28px;
-    }
-
-    .navbar span {
-        font-size: 10px;
-    }
-
-
-    .navbar a.active {
-        transform: translateY(-15px) scale(1.1);
-    }
-
-    .navbar a.active svg {
-        transform: scale(1.1);
-    }
-
-    .homepage-header h1 {
-        font-size: 16px;
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
     .homepage-header img {
-        height: 60px;
-        width: 60px;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(90, 100, 255, 1);
+      transition: transform 0.3s ease;
     }
-}
+
+    .homepage-header img:hover {
+      transform: scale(1.1);
+    }
+
+    .homepage-header h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      background: linear-gradient(to right, #fff, #aab6ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .profile-icon {
+      cursor: pointer;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .profile-icon:hover {
+      color: rgba(90, 100, 255, 1);
+      transform: scale(1.2);
+    }
+
+    /* Video Player Container */
+    .video-container {
+      position: relative;
+      max-width: 800px;
+      margin: 80px auto 20px;
+      padding: 0 20px;
+      z-index: 10;
+    }
+
+    .video-player-wrapper {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(159, 165, 255, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-player-wrapper:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(159, 165, 255, 0.7);
+    }
+
+    .video-player {
+      width: 100%;
+      display: block;
+      background: #000;
+    }
+
+    /* Video Lesson Buttons */
+    .lessons-container {
+      max-width: 800px;
+      margin: 30px auto 100px;
+      padding: 0 20px;
+      
+    }
+
+    .lesson-button {
+      position: relative;
+      background: rgba(2, 2, 39, 1);
+      border: 2px solid rgba(90, 100, 255, 1);
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      box-shadow: 0 4px 0 rgba(90, 100, 255, 0.3);
+    }
+
+    .lesson-button:not(:disabled):hover {
+      background: rgba(90, 100, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(90, 100, 255, 0.4);
+    }
+
+    .lesson-button:disabled {
+      background: rgba(2, 2, 39, 0.5);
+      border-color: rgba(34, 40, 126, 0.5);
+      color: rgba(255, 255, 255, 0.5);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: translateY(4px);
+    }
+
+    .lesson-number {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-right: 15px;
+      display: inline-block;
+      vertical-align: middle;
+      width: 50px;
+      color: rgba(90, 100, 255, 1);
+    }
+
+    .lesson-title {
+      display: inline-block;
+      vertical-align: middle;
+      width: calc(100% - 100px);
+    }
+
+    .lesson-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .lock-icon {
+      color: rgba(255, 100, 100, 0.8);
+    }
+
+    .play-icon {
+      color: rgba(100, 255, 100, 0.8);
+    }
+
+    .lesson-button:not(:disabled):hover .play-icon {
+      transform: translateY(-50%) scale(1.2);
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background-color: rgba(1, 1, 27, 0.9);
+      padding: 12px 0;
+      gap: 5px;
+      z-index: 1000;
+      border-top: 1px solid rgba(90, 100, 255, 0.2);
+    }
+
+    .navbar a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .navbar a:hover {
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .navbar a.active {
+      color: white;
+      background: rgba(90, 100, 255, 0.2);
+      transform: translateY(-10px);
+    }
+
+    .navbar a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      background-color: rgba(90, 100, 255, 1);
+      border-radius: 50%;
+    }
+
+    .navbar a i {
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar a.active i {
+      transform: scale(1.2);
+      color: rgba(90, 100, 255, 1);
+    }
+
+    .navbar a span {
+      font-size: 0.7rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Particles Background */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* Progress Indicator */
+    .progress-indicator {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1001;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, rgba(90, 100, 255, 1), #6a5acd);
+      transition: width 0.3s ease;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .video-container {
+        margin-top: 70px;
+        padding: 0 15px;
+      }
+      
+      .lessons-container {
+        padding: 0 15px;
+      }
+      
+      .lesson-button {
+        padding: 12px 15px;
+      }
+      
+      .lesson-number {
+        font-size: 1.5rem;
+        width: 40px;
+      }
+      
+      .lesson-title {
+        width: calc(100% - 80px);
+      }
+      
+      .navbar a {
+        padding: 5px 8px;
+      }
+      
+      .navbar a i {
+        font-size: 1.2rem;
+      }
+      
+      .navbar a span {
+        font-size: 0.6rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .homepage-header h1 {
+        font-size: 1rem;
+      }
+      
+      .homepage-header img {
+        height: 35px;
+        width: 35px;
+      }
+      
+      .lesson-button {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+      }
+      
+      .lesson-number {
+        font-size: 1.3rem;
+        width: 35px;
+      }
+    }
+
+    /* Ripple Effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.4);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
   </style>
-  
 </head>
 
 <body>
-    <div class="sticky">
+  <!-- Particles Background -->
+  <div class="particles-container" id="particles-js"></div>
+
+  <!-- Progress Indicator -->
+  <div class="progress-indicator">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky-header">
     <div class="homepage-header">
       <div class="header-left">
-        <img src="/images/codeigo-logo.png" alt="Logo">
-
-        <h1>CODEIGO</h1>
+        <img src="/images/codeigo-logo.png" alt="CodeIgo Logo">
+        <h1>CODEIGO VIDEO LESSONS</h1>
       </div>
       <i data-lucide="user" class="profile-icon"></i>
     </div>
+  </header>
 
-    
-    <div class="navbar">
-      <a href="/homepage.html" ><i data-lucide="home"></i> <span>Home</span></a>
-      <a class="active" href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
-      <a href="interpreter.html" onclick="showSection('compiler')"><i data-lucide="code"></i> <span>Compiler</span></a>
-      <a href="games.html" onclick="showSection('games')"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
-      <a href="exercise.html" onclick="showSection('exercise')"><i data-lucide="book-open"></i>
-        <span>Exercise</span></a>
+  <!-- Main Content -->
+  <main>
+    <div class="video-container animate__animated animate__fadeIn">
+      <div class="video-player-wrapper">
+        <video id="videoPlayer" class="video-player" controls poster="/images/video-poster.jpg">
+          <source id="videoSource" src="/video/lesson-1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
     </div>
 
-  <div class="video-container">
-    <video id="videoPlayer" class="video-player" controls>
-      <source id="videoSource" src="/video/lesson-1.mp4" type="video/mp4">
-    </video>
-  </div>
+    <div class="lessons-container">
+      <button id="lesson1" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-1.mp4')">
+        <span class="lesson-number">01</span>
+        <span class="lesson-title">Introduction to Python</span>
+        <i data-lucide="play" class="lesson-icon play-icon"></i>
+      </button>
+      
+      <button id="lesson2" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-2.mp4')" disabled>
+        <span class="lesson-number">02</span>
+        <span class="lesson-title">Variables and Data Types</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson3" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-3.mp4')" disabled>
+        <span class="lesson-number">03</span>
+        <span class="lesson-title">Control Structures</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson4" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-4.mp4')" disabled>
+        <span class="lesson-number">04</span>
+        <span class="lesson-title">Functions and Modules</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson5" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-5.mp4')" disabled>
+        <span class="lesson-number">05</span>
+        <span class="lesson-title">Object-Oriented Programming</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson6" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-6.mp4')" disabled>
+        <span class="lesson-number">06</span>
+        <span class="lesson-title">File Handling</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson7" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-7.mp4')" disabled>
+        <span class="lesson-number">07</span>
+        <span class="lesson-title">Error Handling</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson8" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-8.mp4')" disabled>
+        <span class="lesson-number">08</span>
+        <span class="lesson-title">Working with APIs</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson9" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-9.mp4')" disabled>
+        <span class="lesson-number">09</span>
+        <span class="lesson-title">Database Connections</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+      
+      <button id="lesson10" class="lesson-button animate__animated animate__fadeInUp" onclick="changeVideo('/video/lesson-10.mp4')" disabled>
+        <span class="lesson-number">10</span>
+        <span class="lesson-title">Final Project</span>
+        <i data-lucide="lock" class="lesson-icon lock-icon"></i>
+      </button>
+    </div>
+  </main>
 
-  <div class="video-button">
-    <button id="lesson1" onclick="changeVideo('/video/lesson-2.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">01</span> Introduction to Python
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson2" onclick="changeVideo('assets_/Video_Lesson/lesson-4.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">02</span> Variables and Data Types
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson3" onclick="changeVideo('assets_/Video_Lesson/Lesson3.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">03</span> Lesson 3
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson4" onclick="changeVideo('assets_/Video_Lesson/Lesson4.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">04</span> Lesson 4
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson5" onclick="changeVideo('assets_/Video_Lesson/Lesson5.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">05</span> Lesson 5
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson6" onclick="changeVideo('assets_/Video_Lesson/Lesson6.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">06</span> Lesson 6
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson7" onclick="changeVideo('assets_/Video_Lesson/Lesson7.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">07</span> Lesson 7
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson8" onclick="changeVideo('assets_/Video_Lesson/Lesson8.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">08</span> Lesson 8
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson9" onclick="changeVideo('assets_/Video_Lesson/Lesson9.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">09</span> Lesson 9
-      <i class="lucide lock-icon lock"></i>
-    </button>
-    <button id="lesson10" onclick="changeVideo('assets_/Video_Lesson/Lesson10.mp4')" disabled>
-      <span style="font-size: 45px; font-family: monospace;">10</span> Lesson 10
-      <i class="lucide lock-icon lock"></i>
-    </button>
-  </div>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="/homepage.html"><i data-lucide="home"></i> <span>Home</span></a>
+    <a class="active" href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
+    <a href="interpreter.html"><i data-lucide="code"></i> <span>Compiler</span></a>
+    <a href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
+    <a href="exercise.html"><i data-lucide="book-open"></i> <span>Exercise</span></a>
+  </nav>
 
-<script src="/javarice/video-lesson.js"></script>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Initialize variables
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoSource = document.getElementById('videoSource');
+    const progressBar = document.getElementById('progressBar');
+    const lessonButtons = document.querySelectorAll('.lesson-button');
+    let currentLesson = 1;
+
+    // On page load
+    window.onload = function() {
+      // Initialize particles
+      initParticles();
+      
+      // Check localStorage for completed lessons
+      checkCompletedLessons();
+      
+      // Set up scroll event listener
+      window.addEventListener('scroll', updateProgressBar);
+      
+      // Add click animations to buttons
+      addButtonEffects();
+      
+      // Start with first lesson
+      highlightCurrentLesson(1);
+    };
+
+    // Change video source
+    function changeVideo(videoPath) {
+      // Add click animation
+      const button = event.currentTarget;
+      button.classList.add('animate__pulse');
+      setTimeout(() => {
+        button.classList.remove('animate__pulse');
+      }, 500);
+      
+      // Change video source
+      videoSource.src = videoPath;
+      videoPlayer.load();
+      videoPlayer.play();
+      
+      // Update current lesson
+      const lessonNumber = parseInt(button.id.replace('lesson', ''));
+      currentLesson = lessonNumber;
+      highlightCurrentLesson(lessonNumber);
+      
+      // Add ripple effect
+      addRippleEffect(button);
+    }
+
+    // Check which lessons are completed from localStorage
+    function checkCompletedLessons() {
+      for (let i = 2; i <= 10; i++) {
+        const isCompleted = localStorage.getItem(`videoLesson${i-1}Completed`);
+        if (isCompleted === 'true') {
+          unlockLesson(i);
+        }
+      }
+    }
+
+    // Unlock a lesson
+    function unlockLesson(lessonNumber) {
+      const button = document.getElementById(`lesson${lessonNumber}`);
+      if (button) {
+        button.disabled = false;
+        button.querySelector('.lock-icon').replaceWith(createPlayIcon());
+        
+        // Add unlock animation
+        button.classList.add('animate__animated', 'animate__heartBeat');
+        setTimeout(() => {
+          button.classList.remove('animate__animated', 'animate__heartBeat');
+        }, 1000);
+      }
+    }
+
+    // Create play icon element
+    function createPlayIcon() {
+      const icon = document.createElement('i');
+      icon.setAttribute('data-lucide', 'play');
+      icon.classList.add('lesson-icon', 'play-icon');
+      return icon;
+    }
+
+    // Highlight current lesson
+    function highlightCurrentLesson(lessonNumber) {
+      lessonButtons.forEach(button => {
+        button.classList.remove('current-lesson');
+      });
+      
+      const currentButton = document.getElementById(`lesson${lessonNumber}`);
+      if (currentButton) {
+        currentButton.classList.add('current-lesson');
+      }
+    }
+
+    // Update scroll progress bar
+    function updateProgressBar() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+      progressBar.style.width = scrollPercentage + '%';
+    }
+
+    // Initialize particles
+    function initParticles() {
+      const container = document.getElementById('particles-js');
+      const particleCount = window.innerWidth < 600 ? 30 : 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        createParticle(container);
+      }
+    }
+
+    // Create a single particle
+    function createParticle(container) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random properties
+      const size = Math.random() * 5 + 2;
+      const posX = Math.random() * window.innerWidth;
+      const posY = Math.random() * window.innerHeight;
+      const delay = Math.random() * 5;
+      const duration = Math.random() * 10 + 10;
+      const opacity = Math.random() * 0.3 + 0.1;
+      
+      // Apply styles
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.left = `${posX}px`;
+      particle.style.top = `${posY}px`;
+      particle.style.opacity = opacity;
+      particle.style.background = `rgba(90, 100, 255, ${opacity})`;
+      particle.style.animation = `float ${duration}s infinite ${delay}s`;
+      
+      container.appendChild(particle);
+    }
+
+    // Add ripple effect to buttons
+    function addRippleEffect(element) {
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      
+      element.appendChild(ripple);
+      
+      // Get click position
+      const rect = element.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      // Remove ripple after animation
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    }
+
+    // Add button hover and click effects
+    function addButtonEffects() {
+      lessonButtons.forEach(button => {
+        if (!button.disabled) {
+          button.addEventListener('mouseenter', () => {
+            button.classList.add('animate__animated', 'animate__pulse');
+          });
+          
+          button.addEventListener('mouseleave', () => {
+            button.classList.remove('animate__animated', 'animate__pulse');
+          });
+        }
+      });
+    }
+
+    // Mark lesson as completed (call this when video ends)
+    function completeLesson() {
+      localStorage.setItem(`videoLesson${currentLesson}Completed`, 'true');
+      if (currentLesson < 10) {
+        unlockLesson(currentLesson + 1);
+      }
+    }
+
+    // Set up video event listeners
+    videoPlayer.addEventListener('ended', completeLesson);
+  </script>
 </body>
-
 </html>
