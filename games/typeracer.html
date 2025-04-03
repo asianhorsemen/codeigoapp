@@ -38,7 +38,60 @@
             pointer-events: none;
         }
         
+        /* Start Screen */
+        .start-screen {
+            background-color: rgba(15, 15, 35, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.3);
+        }
+        
+        .start-screen h1 {
+            color: #6495ed;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .instructions {
+            text-align: left;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .instructions h2 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .instructions p {
+            margin-bottom: 15px;
+        }
+        
+        .start-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .start-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Game Container (initially hidden) */
         .game-container {
+            display: none;
             background-color: rgba(15, 15, 35, 0.85);
             border-radius: 8px;
             padding: 15px;
@@ -78,7 +131,7 @@
             background-color: rgba(30, 30, 50, 0.7);
             color: white;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-            font-size: 16px; /* Increased for better mobile readability */
+            font-size: 16px;
         }
         
         .input-area:focus {
@@ -181,16 +234,6 @@
             margin: 8px auto;
         }
         
-        .instructions {
-            background-color: rgba(25, 25, 60, 0.7);
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border-left: 4px solid rgba(100, 149, 237, 0.7);
-            box-shadow: 0 0 12px rgba(0,0,0,0.2);
-            font-size: 14px;
-        }
-        
         .controls {
             display: flex;
             flex-wrap: wrap;
@@ -220,6 +263,15 @@
         @media (max-width: 600px) {
             body {
                 padding: 10px;
+            }
+            
+            .start-screen {
+                padding: 15px;
+            }
+            
+            .start-screen h1 {
+                font-size: 22px;
+                margin-bottom: 15px;
             }
             
             .game-container {
@@ -253,24 +305,34 @@
                 font-size: 20px;
                 margin-bottom: 15px;
             }
-            
-            .instructions {
-                font-size: 13px;
-                padding: 10px;
-            }
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     
-    <div class="game-container">
-        <h1 class="title">Python Code Typing Race</h1>
+    <!-- Start Screen -->
+    <div class="start-screen" id="start-screen">
+        <h1>Python Code Typing Race</h1>
         
         <div class="instructions">
-            <p><strong>How to play:</strong> Type the Python code as fast and accurately as you can. Correct characters turn green, mistakes turn red.</p>
-            <p><strong>Tip:</strong> Pay attention to indentation - it matters in Python!</p>
+            <h2>How to Play</h2>
+            <p>Type the Python code that appears on screen as quickly and accurately as you can.</p>
+            <p>Correct characters will turn <span style="color:#4CAF50">green</span>, while mistakes will turn <span style="color:#f44336">red</span>.</p>
+            
+            <h2>Tips</h2>
+            <p>• Pay attention to indentation - it matters in Python!</p>
+            <p>• Try to type without looking at your keyboard</p>
+            <p>• Accuracy is more important than speed at first</p>
+            <p>• Practice regularly to improve your typing speed</p>
         </div>
+        
+        <button class="start-btn" id="start-btn">Start Game</button>
+    </div>
+    
+    <!-- Game Container (initially hidden) -->
+    <div class="game-container" id="game-container">
+        <h1 class="title">Python Code Typing Race</h1>
         
         <div class="stats">
             <div class="stat-box">
@@ -346,6 +408,9 @@ squared = [n**2 for n in numbers]`,
         ];
 
         // DOM elements
+        const startScreen = document.getElementById('start-screen');
+        const gameContainer = document.getElementById('game-container');
+        const startBtn = document.getElementById('start-btn');
         const codeDisplay = document.getElementById('code-display');
         const codeInput = document.getElementById('code-input');
         const timeDisplay = document.getElementById('time');
@@ -557,6 +622,20 @@ squared = [n**2 for n in numbers]`,
             }, 800);
         }
 
+        // Start the game (show game container, hide start screen)
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameContainer.style.display = 'block';
+            initGame();
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        startBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            startGame();
+        });
+
         // Handle input changes
         codeInput.addEventListener('input', (e) => {
             if (!startTime) {
@@ -676,8 +755,10 @@ squared = [n**2 for n in numbers]`,
 
         // Initialize the game when page loads
         window.addEventListener('DOMContentLoaded', () => {
-            initGame();
             initParticles();
+            // Show start screen by default
+            startScreen.style.display = 'block';
+            gameContainer.style.display = 'none';
         });
 
         // Prevent tab from leaving the textarea (for indentation)
