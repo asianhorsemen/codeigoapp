@@ -171,6 +171,7 @@
       width: 0;
       color: white;
       z-index: 999;
+      bottom: 20px;
     }
 
     @keyframes typing {
@@ -188,10 +189,42 @@
       position: absolute;
       top: -10px;
     }
+
+    /* Loading spinner */
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner-inner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #6a11cb;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 
 <body>
+  <div class="spinner" id="spinner">
+    <div class="spinner-inner"></div>
+  </div>
+  
   <img src="images/codeigo-logo.png" alt="">
   <div class="login-container">
     <!-- Login Form -->
@@ -235,12 +268,11 @@
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
 
     // Your Firebase config
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
       apiKey: "AIzaSyBXxaDjPCID1Zrha2t-JjKrPR9A5bF8MVc",
       authDomain: "codeigo-application.firebaseapp.com",
       projectId: "codeigo-application",
-      storageBucket: "codeigo-application.firebasestorage.app",
+      storageBucket: "codeigo-application.appspot.com",
       messagingSenderId: "866142616520",
       appId: "1:866142616520:web:c91f4cf5c2cdf8db94defd",
       measurementId: "G-F06YJRKQKZ"
@@ -250,17 +282,30 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
+    // Show loading spinner
+    function showLoading() {
+      document.getElementById('spinner').style.display = 'flex';
+    }
+
+    // Hide loading spinner
+    function hideLoading() {
+      document.getElementById('spinner').style.display = 'none';
+    }
+
     // Login function
     document.getElementById("submit").addEventListener("click", function () {
       const email = document.getElementById("Email").value;
       const password = document.getElementById("password").value;
 
+      showLoading();
+      
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          alert("Login successful!");
-          window.location.href = "introduction.html"; // Redirect after login
+          // Redirect after successful login
+          window.location.href = "introduction.html";
         })
         .catch((error) => {
+          hideLoading();
           alert("Error: " + error.message);
         });
     });
@@ -270,12 +315,15 @@
       const email = document.getElementById("signupEmail").value;
       const password = document.getElementById("signupPassword").value;
 
+      showLoading();
+      
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          alert("Sign Up successful!");
-          window.location.href = "introduction.html"; // Redirect after Sign Up
+          // Redirect after successful signup
+          window.location.href = "introduction.html";
         })
         .catch((error) => {
+          hideLoading();
           alert("Error: " + error.message);
         });
     });
@@ -291,13 +339,12 @@
       document.getElementById("loginForm").style.display = "block";
     });
 
+    // Service Worker Registration
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/service-worker.js")
         .then(() => console.log("Service Worker Registered"))
         .catch((error) => console.log("Service Worker Registration Failed", error));
     }
-
   </script>
 </body>
-
 </html>
