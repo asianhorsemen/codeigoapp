@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=600, initial-scale=1.0">
+    <title>Python Fill-in-the-Blank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Source+Code+Pro', monospace;
+            width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(1, 1, 27, 1);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            background-color: rgba(15, 15, 45, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.2);
+        }
+        
+        .start-screen h1 {
+            color: #6495ed;
+            margin-bottom: 25px;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.5);
+        }
+        
+        .instructions {
+            text-align: left;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: rgba(25, 25, 60, 0.7);
+            border-radius: 8px;
+            border-left: 4px solid rgba(100, 149, 237, 0.7);
+        }
+        
+        .instructions h2 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .instructions p {
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .start-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            margin-top: 10px;
+        }
+        
+        .start-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Game Container (initially hidden) */
+        .game-container {
+            display: none;
+            background-color: rgba(15, 15, 45, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.2);
+            margin-bottom: 20px;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+        }
+        
+        h1 {
+            color: #6495ed;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.5);
+        }
+        
+        .code-display {
+            background-color: rgba(40, 44, 52, 0.9);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: 'Source Code Pro', monospace;
+            white-space: pre;
+            line-height: 1.8;
+            tab-size: 4;
+            min-height: 200px;
+            font-size: 15px;
+            color: #abb2bf;
+        }
+        
+        .blank {
+            background-color: rgba(253, 235, 208, 0.2);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border-bottom: 2px dashed #e67e22;
+            cursor: pointer;
+            position: relative;
+            color: #f5cba7;
+            font-weight: bold;
+        }
+        
+        .blank:hover {
+            background-color: rgba(245, 203, 167, 0.3);
+        }
+        
+        .blank.correct {
+            background-color: rgba(39, 174, 96, 0.2);
+            border-bottom: 2px solid #27ae60;
+            color: #a3e4d7;
+        }
+        
+        .blank.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-bottom: 2px solid #e74c3c;
+            color: #f5b7b1;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .option-btn {
+            background-color: rgba(52, 152, 219, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Source Code Pro', monospace;
+            transition: all 0.2s;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .option-btn:hover {
+            background-color: rgba(41, 128, 185, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .option-btn:disabled {
+            background-color: rgba(189, 195, 199, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .stat-box {
+            background-color: rgba(25, 25, 60, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            border: 1px solid rgba(100, 149, 237, 0.2);
+        }
+        
+        .stat-box div:first-child {
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-bottom: 8px;
+        }
+        
+        .stat-box div:last-child {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 5px rgba(100, 149, 237, 0.7);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background-color: rgba(46, 204, 113, 0.8);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .control-btn:hover {
+            background-color: rgba(39, 174, 96, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .control-btn.secondary {
+            background-color: rgba(231, 76, 60, 0.8);
+        }
+        
+        .control-btn.secondary:hover {
+            background-color: rgba(192, 57, 43, 0.9);
+        }
+        
+        .feedback {
+            text-align: center;
+            margin: 20px 0;
+            min-height: 24px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: rgba(25, 25, 60, 0.7);
+            border-left: 4px solid rgba(100, 149, 237, 0.7);
+        }
+        
+        .correct-feedback {
+            color: #a3e4d7;
+            border-left-color: #27ae60;
+        }
+        
+        .incorrect-feedback {
+            color: #f5b7b1;
+            border-left-color: #e74c3c;
+        }
+        
+        .info-feedback {
+            color: #85c1e9;
+        }
+        
+        /* Tooltip for blanks */
+        .blank-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(44, 62, 80, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            white-space: nowrap;
+            z-index: 10;
+            display: none;
+            margin-bottom: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        
+        .blank-tooltip:after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(44, 62, 80, 0.9) transparent transparent transparent;
+        }
+        
+        .blank:hover .blank-tooltip {
+            display: block;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .game-container, .start-screen {
+                padding: 15px;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .control-btn {
+                width: 100%;
+            }
+            
+            .code-display {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+        
+        /* Animation for correct answer */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        .blank.correct {
+            animation: bounce 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Start Screen -->
+    <div class="start-screen" id="start-screen">
+        <h1>Python Fill-in-the-Blank</h1>
+        
+        <div class="instructions">
+            <h2>How to Play</h2>
+            <p>Complete the Python code by selecting the correct options for each blank space.</p>
+            
+            <ul>
+                <li>Click on any highlighted blank to see possible options</li>
+                <li>Hover over blanks to see hints</li>
+                <li>Select the correct option from the buttons below</li>
+                <li>Correct answers will turn green, mistakes red</li>
+                <li>Try to complete all blanks before checking answers</li>
+            </ul>
+            
+            <h2>Tips</h2>
+            <p>• Pay attention to Python syntax and indentation</p>
+            <p>• Think about what logically fits in each blank</p>
+            <p>• Use the hints if you're stuck</p>
+            <p>• Practice regularly to improve your Python skills</p>
+        </div>
+        
+        <button class="start-btn" id="start-btn">Start Coding!</button>
+    </div>
+    
+    <!-- Game Container (initially hidden) -->
+    <div class="game-container" id="game-container">
+        <h1>Python Fill-in-the-Blank</h1>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div>Blanks Filled</div>
+                <div id="blanks-count">0/0</div>
+            </div>
+            <div class="stat-box">
+                <div>Correct</div>
+                <div id="correct-count">0</div>
+            </div>
+            <div class="stat-box">
+                <div>Score</div>
+                <div id="score">0%</div>
+            </div>
+        </div>
+        
+        <div class="code-display" id="code-display"></div>
+        
+        <div class="feedback" id="feedback">Click on a blank to select options</div>
+        
+        <div class="options-container" id="options-container"></div>
+        
+        <div class="controls">
+            <button class="control-btn" id="check-btn">Check Answers</button>
+            <button class="control-btn" id="new-code-btn">New Code</button>
+            <button class="control-btn secondary" id="solution-btn">Show Solution</button>
+        </div>
+    </div>
+
+    <script>
+        // Python code challenges with blanks and options
+        const codeChallenges = [
+            {
+                code: `def calculate_average(numbers):
+    total = sum(____)
+    count = len(____)
+    return total / count`,
+                blanks: [
+                    { 
+                        id: 1,
+                        correct: "numbers",
+                        options: ["numbers", "sum", "count", "total"],
+                        hint: "The list of numbers to average"
+                    },
+                    { 
+                        id: 2,
+                        correct: "numbers",
+                        options: ["numbers", "sum", "count", "total"],
+                        hint: "The list of numbers to average"
+                    }
+                ],
+                explanation: "This function calculates the average of a list of numbers by summing them and dividing by the count."
+            },
+            {
+                code: `def is_even(num):
+    if num % 2 == ____:
+        return True
+    else:
+        return False`,
+                blanks: [
+                    { 
+                        id: 1,
+                        correct: "0",
+                        options: ["0", "1", "2", "num"],
+                        hint: "What remainder means a number is even?"
+                    }
+                ],
+                explanation: "This function checks if a number is even by testing if it's divisible by 2 (remainder 0)."
+            },
+            {
+                code: `for i in range(____):
+    print(i * 2)`,
+                blanks: [
+                    { 
+                        id: 1,
+                        correct: "5",
+                        options: ["5", "10", "i", "2"],
+                        hint: "How many numbers to print?"
+                    }
+                ],
+                explanation: "This loop prints the first 5 even numbers (0, 2, 4, 6, 8)."
+            },
+            {
+                code: `def reverse_string(s):
+    return s[____:____:____]`,
+                blanks: [
+                    { 
+                        id: 1,
+                        correct: "",
+                        options: ["", "0", "1", "-1"],
+                        hint: "Start index (leave blank for default)"
+                    },
+                    { 
+                        id: 2,
+                        correct: "",
+                        options: ["", "0", "1", "-1"],
+                        hint: "End index (leave blank for default)"
+                    },
+                    { 
+                        id: 3,
+                        correct: "-1",
+                        options: ["-1", "1", "0", "2"],
+                        hint: "Step value for reversing"
+                    }
+                ],
+                explanation: "This reverses a string using slice notation with a step of -1."
+            },
+            {
+                code: `class Dog:
+    def __init__(self, name):
+        self.name = ____
+    
+    def bark(self):
+        print(____ + " says woof!")`,
+                blanks: [
+                    { 
+                        id: 1,
+                        correct: "name",
+                        options: ["name", "self", "Dog", "bark"],
+                        hint: "The parameter being assigned"
+                    },
+                    { 
+                        id: 2,
+                        correct: "self.name",
+                        options: ["self.name", "name", "self", "Dog"],
+                        hint: "The dog's name attribute"
+                    }
+                ],
+                explanation: "This Dog class stores a name and has a bark method that prints a message with the name."
+            }
+        ];
+
+        // DOM elements
+        const startScreen = document.getElementById('start-screen');
+        const gameContainer = document.getElementById('game-container');
+        const startBtn = document.getElementById('start-btn');
+        const codeDisplay = document.getElementById('code-display');
+        const optionsContainer = document.getElementById('options-container');
+        const blanksCount = document.getElementById('blanks-count');
+        const correctCount = document.getElementById('correct-count');
+        const score = document.getElementById('score');
+        const feedback = document.getElementById('feedback');
+        const checkBtn = document.getElementById('check-btn');
+        const newCodeBtn = document.getElementById('new-code-btn');
+        const solutionBtn = document.getElementById('solution-btn');
+
+        // Game state
+        let currentChallenge = null;
+        let currentBlank = null;
+        let filledBlanks = {};
+        let totalBlanks = 0;
+        let correctAnswers = 0;
+
+        // Initialize the game
+        function initGame() {
+            // Select random code challenge
+            currentChallenge = codeChallenges[Math.floor(Math.random() * codeChallenges.length)];
+            filledBlanks = {};
+            correctAnswers = 0;
+            totalBlanks = currentChallenge.blanks.length;
+            
+            // Display the code with blanks
+            displayCodeWithBlanks();
+            
+            // Update stats
+            updateStats();
+            
+            // Clear feedback
+            feedback.textContent = 'Click on a blank to select options';
+            feedback.className = 'feedback info-feedback';
+            
+            // Enable all buttons
+            checkBtn.disabled = false;
+            solutionBtn.disabled = false;
+        }
+
+        // Display code with blanks
+        function displayCodeWithBlanks() {
+            let code = currentChallenge.code;
+            let blankIndex = 0;
+            
+            // Replace blanks with interactive elements
+            code = code.replace(/____/g, () => {
+                const blank = currentChallenge.blanks[blankIndex];
+                const blankId = blank.id;
+                const filledValue = filledBlanks[blankId] || '____';
+                const isCorrect = filledBlanks[blankId] === blank.correct;
+                const isIncorrect = filledBlanks[blankId] && !isCorrect;
+                
+                const blankClass = isCorrect ? 'blank correct' : 
+                                  isIncorrect ? 'blank incorrect' : 'blank';
+                
+                blankIndex++;
+                return `<span class="${blankClass}" data-id="${blankId}">${filledValue}
+                        <span class="blank-tooltip">${blank.hint}</span></span>`;
+            });
+            
+            codeDisplay.innerHTML = code;
+            
+            // Add click handlers to blanks
+            document.querySelectorAll('.blank').forEach(blank => {
+                blank.addEventListener('click', () => {
+                    currentBlank = parseInt(blank.dataset.id);
+                    showOptionsForBlank(currentBlank);
+                });
+            });
+        }
+
+        // Show options for the selected blank
+        function showOptionsForBlank(blankId) {
+            optionsContainer.innerHTML = '';
+            const blank = currentChallenge.blanks.find(b => b.id === blankId);
+            
+            blank.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.addEventListener('click', () => {
+                    fillBlank(blankId, option);
+                });
+                optionsContainer.appendChild(btn);
+            });
+            
+            feedback.textContent = `Fill in blank #${blankId}: ${blank.hint}`;
+            feedback.className = 'feedback info-feedback';
+        }
+
+        // Fill a blank with selected option
+        function fillBlank(blankId, value) {
+            filledBlanks[blankId] = value;
+            displayCodeWithBlanks();
+            updateStats();
+            
+            // Show feedback if this was correct
+            const blank = currentChallenge.blanks.find(b => b.id === blankId);
+            if (value === blank.correct) {
+                feedback.textContent = `✅ Correct! "${value}" is the right answer.`;
+                feedback.className = 'feedback correct-feedback';
+            } else {
+                feedback.textContent = `❌ Not quite. Try again or check other options.`;
+                feedback.className = 'feedback incorrect-feedback';
+            }
+        }
+
+        // Update game stats
+        function updateStats() {
+            // Count correct answers
+            correctAnswers = 0;
+            currentChallenge.blanks.forEach(blank => {
+                if (filledBlanks[blank.id] === blank.correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            // Update display
+            blanksCount.textContent = `${Object.keys(filledBlanks).length}/${totalBlanks}`;
+            correctCount.textContent = correctAnswers;
+            
+            const percentage = totalBlanks > 0 ? Math.round((correctAnswers / totalBlanks) * 100) : 0;
+            score.textContent = `${percentage}%`;
+        }
+
+        // Check all answers
+        function checkAnswers() {
+            let allCorrect = true;
+            let allFilled = true;
+            
+            currentChallenge.blanks.forEach(blank => {
+                if (!filledBlanks[blank.id]) {
+                    allFilled = false;
+                }
+                if (filledBlanks[blank.id] !== blank.correct) {
+                    allCorrect = false;
+                }
+            });
+            
+            if (!allFilled) {
+                feedback.textContent = "⚠️ Please fill in all blanks before checking answers.";
+                feedback.className = 'feedback info-feedback';
+                return;
+            }
+            
+            if (allCorrect) {
+                feedback.textContent = `🎉 Perfect! All answers correct! ${currentChallenge.explanation}`;
+                feedback.className = 'feedback correct-feedback';
+                checkBtn.disabled = true;
+                solutionBtn.disabled = true;
+            } else {
+                feedback.textContent = "Some answers are incorrect. Keep trying or check the solution!";
+                feedback.className = 'feedback incorrect-feedback';
+            }
+            
+            // Update display to show correct/incorrect blanks
+            displayCodeWithBlanks();
+        }
+
+        // Show solution
+        function showSolution() {
+            currentChallenge.blanks.forEach(blank => {
+                filledBlanks[blank.id] = blank.correct;
+            });
+            
+            displayCodeWithBlanks();
+            updateStats();
+            feedback.textContent = `Solution: ${currentChallenge.explanation}`;
+            feedback.className = 'feedback correct-feedback';
+            checkBtn.disabled = true;
+            solutionBtn.disabled = true;
+        }
+
+        // Start the game (show game container, hide start screen)
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameContainer.style.display = 'block';
+            initGame();
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        checkBtn.addEventListener('click', checkAnswers);
+        newCodeBtn.addEventListener('click', initGame);
+        solutionBtn.addEventListener('click', showSolution);
+
+        // Initialize with start screen visible
+        window.addEventListener('DOMContentLoaded', () => {
+            startScreen.style.display = 'block';
+            gameContainer.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

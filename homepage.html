@@ -417,6 +417,67 @@
       transform: translateY(-5px);
       box-shadow: 0 6px 15px rgba(90, 100, 255, 0.5);
     }
+
+    .ai-bot-img {
+  width: 90%;       /* Adjust size as needed */
+  height: 90%;      /* Adjust size as needed */
+  object-fit: cover; /* Ensures the image fits properly */
+  border-radius: 50%; /* Makes it circular */
+  border: 2px solid white; /* Optional: Adds a border */
+}
+
+    .ai-bot-fab {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(90, 100, 255, 1), #6a5acd);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(90, 100, 255, 0.5);
+    z-index: 1001;
+    transition: all 0.3s ease;
+  }
+  
+  .ai-bot-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(90, 100, 255, 0.7);
+  }
+  
+  .ai-bot-fab i {
+    font-size: 1.5rem;
+  }
+
+  /* Jump Animation */
+@keyframes jump {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Shake Animation (Alternative) */
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.ai-bot-fab {
+  /* ... (keep existing styles) ... */
+  animation: jump 0.5s infinite; /* Apply jump animation */
+  /* OR */
+  animation: shake 0.3s infinite; /* Apply shake animation */
+}
+
+/* Pause animation on hover */
+.ai-bot-fab:hover {
+  animation-play-state: paused;
+}
+  
   </style>
 </head>
 
@@ -434,7 +495,7 @@
     <div class="homepage-header">
       <div class="header-left">
         <img src="images/codeigo-logo.png" alt="CodeIgo Logo">
-        <h1>CODEIGO LEARNING PATH</h1>
+        <h1>CODEIGO</h1>
       </div>
       <i data-lucide="user" class="profile-icon"></i>
     </div>
@@ -479,6 +540,13 @@
     </div>
   </div>
 
+  <!-- Replace the existing FAB with this -->
+<div class="ai-bot-fab" id="ai-bot-fab">
+  <a href="geminiChatbot.html">
+  <img src="images/codee.png" alt="AI Chatbot" class="ai-bot-img">
+</a>
+</div>
+
   <!-- Navigation Bar -->
   <div class="navbar">
     <a class="active" onclick="showSection('home')">
@@ -506,6 +574,8 @@
   <script>
     // Initialize Lucide icons
     lucide.createIcons();
+
+    
 
     // Initialize variables
     let progress = 0;
@@ -590,6 +660,18 @@
         }
       });
     }
+
+    const aiBotFab = document.getElementById('ai-bot-fab');
+
+function triggerJump() {
+  aiBotFab.style.animation = 'jump 0.5s'; // Apply jump
+  setTimeout(() => {
+    aiBotFab.style.animation = 'none'; // Reset animation
+  }, 500);
+}
+
+// Trigger every 5 seconds
+setInterval(triggerJump, 5000);
 
     // Redirect to lesson page
     function redirectToLesson(lessonUrl) {
