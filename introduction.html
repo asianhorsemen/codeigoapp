@@ -5,12 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multi-Page Progress Example</title>
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: rgba(1, 1, 27, 1);
+      overflow-x: hidden;
     }
 
     .page {
@@ -144,10 +147,18 @@
       font-weight: bold;
       margin: 10px;
       text-align: left;
-      padding: 10px;
+      padding: 15px 20px 15px 60px;
       width: 80%;
       cursor: pointer;
       transition: all 0.1s ease-in-out;
+    }
+
+    .option-button i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
     }
 
     button:active {
@@ -192,7 +203,7 @@
       margin: 10px;
       top: 180px;
       text-align: left;
-      padding: 10px;
+      padding: 15px 20px 15px 60px;
       width: 80%;
       cursor: pointer;
       transition: all 0.1s ease-in-out;
@@ -211,7 +222,7 @@
       font-weight: bold;
       margin: 10px;
       text-align: left;
-      padding: 10px;
+      padding: 15px 20px 15px 60px;
       width: 80%;
       cursor: pointer;
       transition: all 0.1s ease-in-out;
@@ -226,7 +237,6 @@
     .pagemove {
       position: relative;
       top: 200px;
-
     }
 
     .selected-text {
@@ -330,14 +340,52 @@
       font-weight: bold;
       margin: 10px;
       text-align: left;
-      padding: 10px;
+      padding: 15px 20px 15px 60px;
       cursor: pointer;
       transition: all 0.1s ease-in-out;
+    }
+
+    /* Particle effects */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(20px);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Particle container -->
+  <div class="particles" id="particles"></div>
+
   <div class="introduction-sticky">
     <!-- Progress dots removed -->
   </div>
@@ -361,10 +409,18 @@
       <div class="selected-text" id="selectedText2"></div>
     </div>
     <div class="button-container">
-      <button class="option-button" onclick="selectOption('student', 2)">Student</button>
-      <button class="option-button" onclick="selectOption('teacher', 2)">Teacher</button>
-      <button class="option-button" onclick="selectOption('training', 2)">Training</button>
-      <button class="option-button" onclick="selectOption('unemployed', 2)">Unemployed</button>
+      <button class="option-button" onclick="selectOption('student', 2)">
+        <i class="fas fa-graduation-cap"></i> Student
+      </button>
+      <button class="option-button" onclick="selectOption('teacher', 2)">
+        <i class="fas fa-chalkboard-teacher"></i> Teacher
+      </button>
+      <button class="option-button" onclick="selectOption('training', 2)">
+        <i class="fas fa-laptop-code"></i> Training
+      </button>
+      <button class="option-button" onclick="selectOption('unemployed', 2)">
+        <i class="fas fa-user-clock"></i> Unemployed
+      </button>
     </div>
   </div>
 
@@ -376,12 +432,24 @@
         controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
       <div class="selected-text" id="selectedText3"></div>
     </div>
-    <button class="option-button" onclick="selectOption('explore coding', 3)">explore coding</button>
-    <button class="option-button" onclick="selectOption('test my brain', 3)">test my brain</button>
-    <button class="option-button" onclick="selectOption('boost my career', 3)">boost my career</button>
-    <button class="option-button" onclick="selectOption('just for fun', 3)">just for fun</button>
-    <button class="option-button" onclick="selectOption('build my own app', 3)">build my own app</button>
-    <button class="option-button" onclick="selectOption('trip ko lang', 3)">trip ko lang</button>
+    <button class="option-button" onclick="selectOption('explore coding', 3)">
+      <i class="fas fa-search"></i> explore coding
+    </button>
+    <button class="option-button" onclick="selectOption('test my brain', 3)">
+      <i class="fas fa-brain"></i> test my brain
+    </button>
+    <button class="option-button" onclick="selectOption('boost my career', 3)">
+      <i class="fas fa-briefcase"></i> boost my career
+    </button>
+    <button class="option-button" onclick="selectOption('just for fun', 3)">
+      <i class="fas fa-laugh-beam"></i> just for fun
+    </button>
+    <button class="option-button" onclick="selectOption('build my own app', 3)">
+      <i class="fas fa-mobile-alt"></i> build my own app
+    </button>
+    <button class="option-button" onclick="selectOption('trip ko lang', 3)">
+      <i class="fas fa-random"></i> trip ko lang
+    </button>
   </div>
 
   <div id="page4" class="page">
@@ -393,10 +461,18 @@
         controlslist="nodownload nofullscreen noremoteplayback" disablePictureInPicture></video>
       <div class="selected-text" id="selectedText4"></div>
     </div>
-    <button class="option-button" onclick="selectOption('new to coding', 4)">new to coding</button>
-    <button class="option-button" onclick="selectOption('basic knowledge', 4)">basic knowledge</button>
-    <button class="option-button" onclick="selectOption('built some projects', 4)">Built Some Projects</button>
-    <button class="option-button" onclick="selectOption('expert at coding', 4)">expert at coding</button>
+    <button class="option-button" onclick="selectOption('new to coding', 4)">
+      <i class="fas fa-baby"></i> new to coding
+    </button>
+    <button class="option-button" onclick="selectOption('basic knowledge', 4)">
+      <i class="fas fa-book"></i> basic knowledge
+    </button>
+    <button class="option-button" onclick="selectOption('built some projects', 4)">
+      <i class="fas fa-project-diagram"></i> Built Some Projects
+    </button>
+    <button class="option-button" onclick="selectOption('expert at coding', 4)">
+      <i class="fas fa-code"></i> expert at coding
+    </button>
   </div>
 
   <div id="page5" class="page">
@@ -414,15 +490,54 @@
         <span id="slot4">_____</span>
       </div>
 
-      <button class="option-button" id="btnPrint" onclick="fillSlot(1, 'print', this)">print</button>
-      <button class="option-button" id="btnOpenParen" onclick="fillSlot(2, '(', this)">(</button>
-      <button class="option-button" id="btnHello" onclick="fillSlot(3, 'hello world', this)">"hello world"</button>
-      <button class="option-button" id="btnCloseParen" onclick="fillSlot(4, ')', this)">)</button>
+      <button class="option-button" id="btnPrint" onclick="fillSlot(1, 'print', this)">
+         print
+      </button>
+      <button class="option-button" id="btnOpenParen" onclick="fillSlot(2, '(', this)">
+       
+      </button>
+      <button class="option-button" id="btnHello" onclick="fillSlot(3, 'hello world', this)">
+       "hello world"
+      </button>
+      <button class="option-button" id="btnCloseParen" onclick="fillSlot(4, ')', this)">
+      </button>
     </div>
   </div>
 
   <script>
     let currentPage = 1;
+
+    // Create particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size between 2px and 5px
+        const size = Math.random() * 3 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.bottom = `-${size}px`;
+        
+        // Random animation duration between 5s and 15s
+        const duration = Math.random() * 10 + 5;
+        particle.style.animationDuration = `${duration}s`;
+        
+        // Random delay
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Initialize particles when page loads
+    window.addEventListener('load', createParticles);
 
     function nextPage(pageNumber) {
       document.getElementById('page' + currentPage).classList.remove('active');
@@ -431,13 +546,10 @@
     }
 
     function selectOption(option, pageNumber) {
-// Delay of 0ms to ensure the text is updated after the button click
-
-  setTimeout(() => {
-    nextPage(pageNumber + 1);
-  },);
-}
-
+      setTimeout(() => {
+        nextPage(pageNumber + 1);
+      });
+    }
 
     function fillSlot(slotNumber, text, buttonElement) {
       let slot = document.getElementById('slot' + slotNumber);
@@ -465,5 +577,4 @@
     }
   </script>
 </body>
-
 </html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=600, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Fill-in-the-Blank</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
     <style>
@@ -13,40 +13,51 @@
         }
         
         body {
-            font-family: 'Source+Code+Pro', monospace;
-            width: 600px;
+            font-family: 'Source Code Pro', monospace;
+            width: 100%;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
             background-color: rgba(1, 1, 27, 1);
-            color: #e0e0e0;
-            line-height: 1.6;
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
         }
 
+        /* Particle canvas */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
         /* Start Screen */
         .start-screen {
-            background-color: rgba(15, 15, 45, 0.9);
-            border-radius: 10px;
-            padding: 30px;
+            background-color: rgba(15, 15, 35, 0.9);
+            border-radius: 8px;
+            padding: 20px;
             text-align: center;
             margin-bottom: 20px;
             border: 1px solid rgba(100, 149, 237, 0.3);
-            box-shadow: 0 0 20px rgba(100, 149, 237, 0.2);
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.3);
         }
         
         .start-screen h1 {
             color: #6495ed;
-            margin-bottom: 25px;
-            font-size: 28px;
-            text-shadow: 0 0 10px rgba(100, 149, 237, 0.5);
+            margin-bottom: 20px;
+            font-size: 24px;
         }
         
         .instructions {
             text-align: left;
             margin-bottom: 30px;
-            padding: 15px;
-            background-color: rgba(25, 25, 60, 0.7);
-            border-radius: 8px;
-            border-left: 4px solid rgba(100, 149, 237, 0.7);
+            line-height: 1.6;
         }
         
         .instructions h2 {
@@ -57,68 +68,99 @@
         
         .instructions p {
             margin-bottom: 15px;
-            font-size: 15px;
-        }
-        
-        .instructions ul {
-            padding-left: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
         }
         
         .start-btn {
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 12px 30px;
             font-size: 18px;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         .start-btn:hover {
             background-color: #45a049;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
         }
-
+        
         /* Game Container (initially hidden) */
         .game-container {
             display: none;
-            background-color: rgba(15, 15, 45, 0.9);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(100, 149, 237, 0.2);
-            margin-bottom: 20px;
-            border: 1px solid rgba(100, 149, 237, 0.3);
+            background-color: rgba(15, 15, 35, 0.85);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.3);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        h1 {
-            color: #6495ed;
+        .title {
+            color: #fff;
             text-align: center;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(100, 149, 237, 0.5);
+            text-shadow: 0 0 8px rgba(100, 149, 237, 0.7);
+            position: relative;
+            font-size: 22px;
+        }
+        
+        .title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(100, 149, 237, 0.7), transparent);
+            margin: 8px auto;
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            justify-content: space-between;
+        }
+        
+        .stat-box {
+            background-color: rgba(10, 10, 30, 0.7);
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: calc(25% - 8px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-size: 13px;
+        }
+        
+        .stat-box div:last-child {
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(100, 149, 237, 0.7);
+            font-size: 14px;
         }
         
         .code-display {
             background-color: rgba(40, 44, 52, 0.9);
-            border: 1px solid rgba(100, 149, 237, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-family: 'Source Code Pro', monospace;
-            white-space: pre;
-            line-height: 1.8;
-            tab-size: 4;
-            min-height: 200px;
-            font-size: 15px;
             color: #abb2bf;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.4;
+            tab-size: 4;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(100, 149, 237, 0.1);
+            font-size: 14px;
+            -webkit-overflow-scrolling: touch;
         }
         
         .blank {
@@ -151,185 +193,94 @@
         .options-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
             justify-content: center;
         }
         
         .option-btn {
-            background-color: rgba(52, 152, 219, 0.8);
+            background-color: rgba(76, 175, 80, 0.8);
             color: white;
             border: none;
             padding: 10px 15px;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
-            font-family: 'Source Code Pro', monospace;
-            transition: all 0.2s;
             font-size: 14px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-grow: 1;
+            min-width: calc(33% - 8px);
         }
         
-        .option-btn:hover {
-            background-color: rgba(41, 128, 185, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .option-btn:disabled {
-            background-color: rgba(189, 195, 199, 0.5);
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 10px;
-        }
-        
-        .stat-box {
-            background-color: rgba(25, 25, 60, 0.7);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            flex: 1;
-            border: 1px solid rgba(100, 149, 237, 0.2);
-        }
-        
-        .stat-box div:first-child {
-            font-size: 14px;
-            color: #bdc3c7;
-            margin-bottom: 8px;
-        }
-        
-        .stat-box div:last-child {
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 0 5px rgba(100, 149, 237, 0.7);
-        }
-        
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .control-btn {
-            background-color: rgba(46, 204, 113, 0.8);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            flex: 1;
-            min-width: 120px;
-        }
-        
-        .control-btn:hover {
-            background-color: rgba(39, 174, 96, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .control-btn.secondary {
-            background-color: rgba(231, 76, 60, 0.8);
-        }
-        
-        .control-btn.secondary:hover {
-            background-color: rgba(192, 57, 43, 0.9);
+        .option-btn:hover, .option-btn:active {
+            background-color: rgba(69, 160, 73, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .feedback {
             text-align: center;
-            margin: 20px 0;
-            min-height: 24px;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 8px;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
             background-color: rgba(25, 25, 60, 0.7);
-            border-left: 4px solid rgba(100, 149, 237, 0.7);
+            font-size: 14px;
         }
         
         .correct-feedback {
             color: #a3e4d7;
-            border-left-color: #27ae60;
+            border-left: 4px solid #27ae60;
         }
         
         .incorrect-feedback {
             color: #f5b7b1;
-            border-left-color: #e74c3c;
+            border-left: 4px solid #e74c3c;
         }
         
         .info-feedback {
             color: #85c1e9;
+            border-left: 4px solid #6495ed;
         }
         
-        /* Tooltip for blanks */
-        .blank-tooltip {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(44, 62, 80, 0.9);
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: space-between;
+        }
+        
+        .control-btn {
+            background-color: rgba(76, 175, 80, 0.8);
             color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            white-space: nowrap;
-            z-index: 10;
-            display: none;
-            margin-bottom: 10px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-grow: 1;
+            min-width: calc(33% - 8px);
         }
         
-        .blank-tooltip:after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: rgba(44, 62, 80, 0.9) transparent transparent transparent;
+        .control-btn:hover, .control-btn:active {
+            background-color: rgba(69, 160, 73, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
-        .blank:hover .blank-tooltip {
-            display: block;
+        .control-btn.secondary {
+            background-color: rgba(100, 149, 237, 0.8);
         }
         
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            body {
-                width: 100%;
-                padding: 15px;
-            }
-            
-            .game-container, .start-screen {
-                padding: 15px;
-            }
-            
-            .stats {
-                flex-direction: column;
-            }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .control-btn {
-                width: 100%;
-            }
-            
-            .code-display {
-                font-size: 14px;
-                padding: 12px;
-            }
+        .control-btn.secondary:hover, .control-btn.secondary:active {
+            background-color: rgba(70, 130, 180, 0.9);
+        }
+        
+        .return-btn {
+            background-color: rgba(100, 149, 237, 0.8);
+            min-width: 100%;
+            margin-top: 10px;
         }
         
         /* Animation for correct answer */
@@ -341,9 +292,54 @@
         .blank.correct {
             animation: bounce 0.5s;
         }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .start-screen {
+                padding: 15px;
+            }
+            
+            .start-screen h1 {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            
+            .game-container {
+                padding: 12px;
+            }
+            
+            .code-display {
+                font-size: 13px;
+                padding: 10px;
+                line-height: 1.3;
+            }
+            
+            .stat-box {
+                min-width: calc(50% - 6px);
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+            
+            .option-btn, .control-btn {
+                min-width: calc(50% - 6px);
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+            
+            .title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div id="particles-js"></div>
+    
     <!-- Start Screen -->
     <div class="start-screen" id="start-screen">
         <h1>Python Fill-in-the-Blank</h1>
@@ -351,32 +347,25 @@
         <div class="instructions">
             <h2>How to Play</h2>
             <p>Complete the Python code by selecting the correct options for each blank space.</p>
-            
-            <ul>
-                <li>Click on any highlighted blank to see possible options</li>
-                <li>Hover over blanks to see hints</li>
-                <li>Select the correct option from the buttons below</li>
-                <li>Correct answers will turn green, mistakes red</li>
-                <li>Try to complete all blanks before checking answers</li>
-            </ul>
+            <p>Click on any highlighted blank to see possible options.</p>
+            <p>Correct answers will turn <span style="color:#4CAF50">green</span>, mistakes will turn <span style="color:#f44336">red</span>.</p>
             
             <h2>Tips</h2>
             <p>• Pay attention to Python syntax and indentation</p>
             <p>• Think about what logically fits in each blank</p>
-            <p>• Use the hints if you're stuck</p>
             <p>• Practice regularly to improve your Python skills</p>
         </div>
         
-        <button class="start-btn" id="start-btn">Start Coding!</button>
+        <button class="start-btn" id="start-btn">Start Game</button>
     </div>
     
     <!-- Game Container (initially hidden) -->
     <div class="game-container" id="game-container">
-        <h1>Python Fill-in-the-Blank</h1>
+        <h1 class="title">Python Fill-in-the-Blank</h1>
         
         <div class="stats">
             <div class="stat-box">
-                <div>Blanks Filled</div>
+                <div>Filled</div>
                 <div id="blanks-count">0/0</div>
             </div>
             <div class="stat-box">
@@ -391,17 +380,22 @@
         
         <div class="code-display" id="code-display"></div>
         
-        <div class="feedback" id="feedback">Click on a blank to select options</div>
+        <div class="feedback info-feedback" id="feedback">Click on a blank to select options</div>
         
         <div class="options-container" id="options-container"></div>
         
         <div class="controls">
             <button class="control-btn" id="check-btn">Check Answers</button>
-            <button class="control-btn" id="new-code-btn">New Code</button>
+            <button class="control-btn secondary" id="new-code-btn">New Code</button>
             <button class="control-btn secondary" id="solution-btn">Show Solution</button>
         </div>
+        
+        <button class="control-btn return-btn" id="return-btn">Return to Games</button>
     </div>
 
+    <!-- Include particles.js library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <script>
         // Python code challenges with blanks and options
         const codeChallenges = [
@@ -518,6 +512,7 @@
         const checkBtn = document.getElementById('check-btn');
         const newCodeBtn = document.getElementById('new-code-btn');
         const solutionBtn = document.getElementById('solution-btn');
+        const returnBtn = document.getElementById('return-btn');
 
         // Game state
         let currentChallenge = null;
@@ -525,6 +520,93 @@
         let filledBlanks = {};
         let totalBlanks = 0;
         let correctAnswers = 0;
+
+        // Initialize particles.js
+        function initParticles() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": {
+                        "value": 40,
+                        "density": {
+                            "enable": true,
+                            "value_area": 600
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.4,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 2.5,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 2,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 120,
+                        "color": "#6495ed",
+                        "opacity": 0.15,
+                        "width": 0.8
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 0.8,
+                        "direction": "none",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 120,
+                            "line_linked": {
+                                "opacity": 0.3
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 3
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        }
 
         // Initialize the game
         function initGame() {
@@ -566,8 +648,7 @@
                                   isIncorrect ? 'blank incorrect' : 'blank';
                 
                 blankIndex++;
-                return `<span class="${blankClass}" data-id="${blankId}">${filledValue}
-                        <span class="blank-tooltip">${blank.hint}</span></span>`;
+                return `<span class="${blankClass}" data-id="${blankId}">${filledValue}</span>`;
             });
             
             codeDisplay.innerHTML = code;
@@ -576,6 +657,11 @@
             document.querySelectorAll('.blank').forEach(blank => {
                 blank.addEventListener('click', () => {
                     currentBlank = parseInt(blank.dataset.id);
+                    showOptionsForBlank(currentBlank);
+                });
+                blank.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    currentBlank = parseInt(this.dataset.id);
                     showOptionsForBlank(currentBlank);
                 });
             });
@@ -591,6 +677,10 @@
                 btn.className = 'option-btn';
                 btn.textContent = option;
                 btn.addEventListener('click', () => {
+                    fillBlank(blankId, option);
+                });
+                btn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
                     fillBlank(blankId, option);
                 });
                 optionsContainer.appendChild(btn);
@@ -692,12 +782,40 @@
 
         // Event listeners
         startBtn.addEventListener('click', startGame);
+        startBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            startGame();
+        });
+        
         checkBtn.addEventListener('click', checkAnswers);
+        checkBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            checkAnswers();
+        });
+        
         newCodeBtn.addEventListener('click', initGame);
+        newCodeBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            initGame();
+        });
+        
         solutionBtn.addEventListener('click', showSolution);
+        solutionBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            showSolution();
+        });
+        
+        returnBtn.addEventListener('click', function() {
+            window.location.href = 'games.html';
+        });
+        returnBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            window.location.href = 'games.html';
+        });
 
         // Initialize with start screen visible
         window.addEventListener('DOMContentLoaded', () => {
+            initParticles();
             startScreen.style.display = 'block';
             gameContainer.style.display = 'none';
         });

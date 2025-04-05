@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Code Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Source Code Pro', monospace;
+            width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: rgba(1, 1, 27, 1);
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+        /* Particle canvas */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Start Screen */
+        .start-screen {
+            background-color: rgba(15, 15, 35, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.3);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .start-screen:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(100, 149, 237, 0.4);
+        }
+        
+        .start-screen h1 {
+            color: #6495ed;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(100, 149, 237, 0.5);
+        }
+        
+        .instructions {
+            text-align: left;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .instructions h2 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .instructions p {
+            margin-bottom: 15px;
+        }
+        
+        .start-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .start-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        .start-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .start-btn::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .start-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        /* Game Container (initially hidden) */
+        .game-container {
+            display: none;
+            background-color: rgba(15, 15, 35, 0.85);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.3);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .game-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .title {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px rgba(100, 149, 237, 0.7);
+            position: relative;
+            font-size: 22px;
+        }
+        
+        .title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(100, 149, 237, 0.7), transparent);
+            margin: 8px auto;
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            justify-content: space-between;
+        }
+        
+        .stat-box {
+            background-color: rgba(10, 10, 30, 0.7);
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: calc(25% - 8px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-size: 13px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 149, 237, 0.3);
+        }
+        
+        .stat-box div:last-child {
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(100, 149, 237, 0.7);
+            font-size: 14px;
+        }
+        
+        .question-container {
+            background-color: rgba(40, 44, 52, 0.9);
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(100, 149, 237, 0.1);
+            font-size: 16px;
+            line-height: 1.5;
+            transition: transform 0.3s ease;
+        }
+        
+        .question-container:hover {
+            transform: scale(1.01);
+        }
+        
+        .code-snippet {
+            background-color: rgba(30, 30, 50, 0.7);
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: 'Source Code Pro', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            tab-size: 4;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .option-btn {
+            background-color: rgba(52, 152, 219, 0.8);
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            text-align: left;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option-btn:hover {
+            background-color: rgba(41, 128, 185, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .option-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .option-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .option-btn:hover::before {
+            left: 100%;
+        }
+        
+        .option-btn.correct {
+            background-color: rgba(46, 204, 113, 0.8);
+            animation: pulseCorrect 0.5s;
+        }
+        
+        .option-btn.incorrect {
+            background-color: rgba(231, 76, 60, 0.8);
+            animation: shake 0.5s;
+        }
+        
+        .option-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        @keyframes pulseCorrect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        
+        .feedback {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 15px;
+            min-height: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .correct-feedback {
+            color: #a3e4d7;
+            background-color: rgba(39, 174, 96, 0.2);
+            border-left: 4px solid #27ae60;
+            animation: fadeIn 0.5s;
+        }
+        
+        .incorrect-feedback {
+            color: #f5b7b1;
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid #e74c3c;
+            animation: fadeIn 0.5s;
+        }
+        
+        .info-feedback {
+            color: #85c1e9;
+            background-color: rgba(52, 152, 219, 0.2);
+            border-left: 4px solid #3498db;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: space-between;
+        }
+        
+        .control-btn {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-grow: 1;
+            min-width: calc(50% - 8px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control-btn:hover {
+            background-color: rgba(69, 160, 73, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .control-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .control-btn::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .control-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        .control-btn.secondary {
+            background-color: rgba(100, 149, 237, 0.8);
+        }
+        
+        .control-btn.secondary:hover {
+            background-color: rgba(70, 130, 180, 0.9);
+        }
+        
+        .return-btn {
+            background-color: rgba(155, 89, 182, 0.8);
+            min-width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .return-btn:hover {
+            background-color: rgba(142, 68, 173, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .return-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 15px 0;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(to right, #4CAF50, #2ecc71);
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .start-screen {
+                padding: 15px;
+            }
+            
+            .start-screen h1 {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            
+            .game-container {
+                padding: 12px;
+            }
+            
+            .question-container {
+                font-size: 15px;
+                padding: 12px;
+            }
+            
+            .option-btn, .control-btn {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+            
+            .title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- Start Screen -->
+    <div class="start-screen" id="start-screen">
+        <h1>Python Code Quiz</h1>
+        
+        <div class="instructions">
+            <h2>Test Your Python Knowledge</h2>
+            <p>Answer multiple-choice questions about Python programming concepts and code snippets.</p>
+            <p>Each correct answer earns you points. Try to get them all right!</p>
+            
+            <h2>Features</h2>
+            <p>• 15 Python-specific questions</p>
+            <p>• Interactive code snippets</p>
+            <p>• Animated feedback</p>
+            <p>• Detailed explanations</p>
+        </div>
+        
+        <button class="start-btn" id="start-btn">Start Quiz</button>
+    </div>
+    
+    <!-- Game Container (initially hidden) -->
+    <div class="game-container" id="game-container">
+        <h1 class="title">Python Code Quiz</h1>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div>Question</div>
+                <div id="question-count">1/10</div>
+            </div>
+            <div class="stat-box">
+                <div>Score</div>
+                <div id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div>Correct</div>
+                <div id="correct-count">0</div>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="question-container" id="question-container">
+            <div id="question-text">Loading question...</div>
+            <div class="code-snippet" id="code-snippet"></div>
+        </div>
+        
+        <div class="options-container" id="options-container"></div>
+        
+        <div class="feedback info-feedback" id="feedback">Select an answer</div>
+        
+        <div class="controls">
+            <button class="control-btn" id="next-btn" disabled>Next Question</button>
+            <button class="control-btn secondary" id="new-quiz-btn">New Quiz</button>
+        </div>
+        
+        <button class="control-btn return-btn" id="return-btn">Return to Games</button>
+    </div>
+
+    <!-- Include particles.js library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // Python quiz questions
+        const pythonQuestions = [
+            {
+                question: "What will this code output?\n\nprint(3 * 'ab' + 'c')",
+                code: "print(3 * 'ab' + 'c')",
+                options: [
+                    "'abababc'",
+                    "'3abc'",
+                    "'abababcc'",
+                    "Error"
+                ],
+                correct: 0,
+                explanation: "In Python, multiplying a string by an integer repeats the string that many times."
+            },
+            {
+                question: "Which method removes and returns the last item from a list?",
+                code: "my_list = [1, 2, 3, 4]",
+                options: [
+                    "pop()",
+                    "remove()",
+                    "delete()",
+                    "cut()"
+                ],
+                correct: 0,
+                explanation: "The pop() method removes and returns the last item by default, or the item at a given index."
+            },
+            {
+                question: "What is the correct way to create a virtual environment in Python?",
+                code: "",
+                options: [
+                    "python create venv",
+                    "python -m venv myenv",
+                    "virtualenv create myenv",
+                    "pyenv new myenv"
+                ],
+                correct: 1,
+                explanation: "The standard way is 'python -m venv myenv' which creates a virtual environment in the 'myenv' folder."
+            },
+            {
+                question: "What does this list comprehension do?\n\n[x**2 for x in range(5)]",
+                code: "[x**2 for x in range(5)]",
+                options: [
+                    "Creates a list of squares from 0 to 4",
+                    "Creates a list of squares from 1 to 5",
+                    "Raises an error",
+                    "Creates a dictionary"
+                ],
+                correct: 0,
+                explanation: "It generates [0, 1, 4, 9, 16] - squares of numbers 0 through 4."
+            },
+            {
+                question: "How do you open a file for reading in Python?",
+                code: "",
+                options: [
+                    "open('file.txt', 'read')",
+                    "open('file.txt', 'r')",
+                    "open('file.txt', 'readonly')",
+                    "open('file.txt')"
+                ],
+                correct: 1,
+                explanation: "The correct mode is 'r' for reading. Just open() defaults to read mode but explicitly using 'r' is clearer."
+            },
+            {
+                question: "What is the output of this code?\n\nprint(1 + 2 * 3 ** 2)",
+                code: "print(1 + 2 * 3 ** 2)",
+                options: [
+                    "19",
+                    "27",
+                    "15",
+                    "21"
+                ],
+                correct: 0,
+                explanation: "Operator precedence: exponentiation (3**2=9) comes first, then multiplication (2*9=18), then addition (1+18=19)."
+            },
+            {
+                question: "Which decorator is used to define a class method?",
+                code: "",
+                options: [
+                    "@classmethod",
+                    "@staticmethod",
+                    "@classfunc",
+                    "@method"
+                ],
+                correct: 0,
+                explanation: "@classmethod is the decorator used to define a method that receives the class as the first argument."
+            },
+            {
+                question: "What does this code do?\n\nimport sys\nsys.path.append('/new/path')",
+                code: "import sys\nsys.path.append('/new/path')",
+                options: [
+                    "Adds a directory to Python's module search path",
+                    "Changes the current working directory",
+                    "Prints the system path",
+                    "Imports a module from a specific path"
+                ],
+                correct: 0,
+                explanation: "sys.path is a list of directories Python searches for modules when importing."
+            },
+            {
+                question: "How do you create a dictionary with keys 'a' and 'b'?",
+                code: "",
+                options: [
+                    "dict(a=1, b=2)",
+                    "{a: 1, b: 2}",
+                    "dict('a'=1, 'b'=2)",
+                    "Both A and B"
+                ],
+                correct: 3,
+                explanation: "Both dict(a=1, b=2) and {'a': 1, 'b': 2} are correct ways to create dictionaries."
+            },
+            {
+                question: "What is the output of this code?\n\nx = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)",
+                code: "x = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)",
+                options: [
+                    "[1, 2, 3]",
+                    "[1, 2, 3, 4]",
+                    "[4, 3, 2, 1]",
+                    "Error"
+                ],
+                correct: 1,
+                explanation: "y and x reference the same list object, so modifying y affects x."
+            },
+            {
+                question: "Which is NOT a valid variable name in Python?",
+                code: "",
+                options: [
+                    "_my_var",
+                    "myVar2",
+                    "2ndVar",
+                    "my_var"
+                ],
+                correct: 2,
+                explanation: "Variable names cannot start with numbers in Python."
+            },
+            {
+                question: "What does the 'with' statement do?",
+                code: "with open('file.txt') as f:",
+                options: [
+                    "Ensures proper resource cleanup",
+                    "Creates a new scope",
+                    "Imports a module temporarily",
+                    "Handles exceptions automatically"
+                ],
+                correct: 0,
+                explanation: "The 'with' statement ensures proper acquisition and release of resources, like closing files."
+            },
+            {
+                question: "What is the output of bool('False')?",
+                code: "print(bool('False'))",
+                options: [
+                    "False",
+                    "True",
+                    "None",
+                    "Error"
+                ],
+                correct: 1,
+                explanation: "Any non-empty string is True in Python, even if it contains 'False'."
+            },
+            {
+                question: "Which module would you use for working with dates?",
+                code: "",
+                options: [
+                    "datetime",
+                    "time",
+                    "calendar",
+                    "All of the above"
+                ],
+                correct: 3,
+                explanation: "All these modules are part of Python's date/time handling capabilities."
+            },
+            {
+                question: "What does this code do?\n\nlambda x: x**2",
+                code: "lambda x: x**2",
+                options: [
+                    "Creates a named function",
+                    "Creates an anonymous function that squares its input",
+                    "Raises x to the power of 2 immediately",
+                    "Imports a lambda module"
+                ],
+                correct: 1,
+                explanation: "Lambda creates small anonymous functions. This one takes x and returns x squared."
+            }
+        ];
+
+        // DOM elements
+        const startScreen = document.getElementById('start-screen');
+        const gameContainer = document.getElementById('game-container');
+        const startBtn = document.getElementById('start-btn');
+        const questionText = document.getElementById('question-text');
+        const codeSnippet = document.getElementById('code-snippet');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCount = document.getElementById('question-count');
+        const scoreDisplay = document.getElementById('score');
+        const correctCount = document.getElementById('correct-count');
+        const feedback = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const newQuizBtn = document.getElementById('new-quiz-btn');
+        const returnBtn = document.getElementById('return-btn');
+        const progressBar = document.getElementById('progress-bar');
+
+        // Game state
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let correctAnswers = 0;
+        let selectedOption = null;
+        let answered = false;
+
+        // Initialize particles.js
+        function initParticles() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": {
+                        "value": 40,
+                        "density": {
+                            "enable": true,
+                            "value_area": 600
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.4,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 2.5,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 2,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 120,
+                        "color": "#6495ed",
+                        "opacity": 0.15,
+                        "width": 0.8
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 0.8,
+                        "direction": "none",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 120,
+                            "line_linked": {
+                                "opacity": 0.3
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 3
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        }
+
+        // Initialize the quiz
+        function initQuiz() {
+            // Select 10 random questions
+            currentQuestions = [...pythonQuestions]
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 10);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            correctAnswers = 0;
+            answered = false;
+            
+            // Update UI
+            updateStats();
+            showQuestion();
+            nextBtn.disabled = true;
+            progressBar.style.width = '0%';
+        }
+
+        // Show current question
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+            
+            const question = currentQuestions[currentQuestionIndex];
+            questionText.textContent = question.question;
+            
+            if (question.code) {
+                codeSnippet.textContent = question.code;
+                codeSnippet.style.display = 'block';
+            } else {
+                codeSnippet.textContent = '';
+                codeSnippet.style.display = 'none';
+            }
+            
+            // Create option buttons
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.dataset.index = index;
+                btn.addEventListener('click', selectOption);
+                btn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    selectOption.call(this, e);
+                });
+                optionsContainer.appendChild(btn);
+            });
+            
+            // Update feedback
+            feedback.textContent = 'Select an answer';
+            feedback.className = 'feedback info-feedback';
+            
+            // Update progress
+            const progress = (currentQuestionIndex / currentQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Handle option selection
+        function selectOption() {
+            if (answered) return;
+            
+            const selectedIndex = parseInt(this.dataset.index);
+            const question = currentQuestions[currentQuestionIndex];
+            const options = optionsContainer.querySelectorAll('.option-btn');
+            
+            // Mark selected option
+            selectedOption = selectedIndex;
+            this.classList.add('incorrect');
+            
+            // Check if correct
+            if (selectedIndex === question.correct) {
+                this.classList.remove('incorrect');
+                this.classList.add('correct');
+                score += 10;
+                correctAnswers++;
+                feedback.textContent = `✅ Correct! ${question.explanation}`;
+                feedback.className = 'feedback correct-feedback';
+            } else {
+                // Show correct answer
+                options[question.correct].classList.add('correct');
+                feedback.textContent = `❌ Incorrect. ${question.explanation}`;
+                feedback.className = 'feedback incorrect-feedback';
+            }
+            
+            // Disable all options
+            options.forEach(option => {
+                option.disabled = true;
+            });
+            
+            answered = true;
+            nextBtn.disabled = false;
+            updateStats();
+        }
+
+        // Move to next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+            answered = false;
+            selectedOption = null;
+            nextBtn.disabled = true;
+            updateStats();
+            showQuestion();
+        }
+
+        // Update stats display
+        function updateStats() {
+            questionCount.textContent = `${currentQuestionIndex + 1}/${currentQuestions.length}`;
+            scoreDisplay.textContent = score;
+            correctCount.textContent = correctAnswers;
+        }
+
+        // End quiz and show results
+        function endQuiz() {
+            questionText.textContent = `Quiz Complete! Your Score: ${score}/${currentQuestions.length * 10}`;
+            codeSnippet.textContent = '';
+            codeSnippet.style.display = 'none';
+            optionsContainer.innerHTML = '';
+            feedback.textContent = `You got ${correctAnswers} out of ${currentQuestions.length} questions correct!`;
+            feedback.className = 'feedback correct-feedback';
+            nextBtn.style.display = 'none';
+            progressBar.style.width = '100%';
+        }
+
+        // Start the quiz (show game container, hide start screen)
+        function startQuiz() {
+            startScreen.style.display = 'none';
+            gameContainer.style.display = 'block';
+            initQuiz();
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startQuiz);
+        startBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            startQuiz();
+        });
+        
+        nextBtn.addEventListener('click', nextQuestion);
+        nextBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            nextQuestion();
+        });
+        
+        newQuizBtn.addEventListener('click', initQuiz);
+        newQuizBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            initQuiz();
+        });
+        
+        returnBtn.addEventListener('click', function() {
+            window.location.href = 'games.html';
+        });
+        returnBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            window.location.href = 'games.html';
+        });
+
+        // Initialize with start screen visible
+        window.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            startScreen.style.display = 'block';
+            gameContainer.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
