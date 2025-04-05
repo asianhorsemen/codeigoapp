@@ -5,289 +5,151 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Python Puzzle Game</title>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
     body {
-    font-family: Arial, sans-serif;
-    background-color: rgba(1, 1, 27, 1);
-    color: white;
-    margin: 0;
-    padding: 0;
-    overflow-y: hidden;
-  }
+      font-family: Arial, sans-serif;
+      background-color: rgba(1, 1, 27, 1);
+      color: white;
+      margin: 0;
+      padding: 0;
+      overflow-y: hidden;
+    }
 
-  .homepage-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    width: 100%;
-    background-color: rgba(1, 1, 27, 1);
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-  }
+    .homepage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      width: 100%;
+      background-color: rgba(1, 1, 27, 1);
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+    }
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  .homepage-header img {
-    height: 60px;
-    width: 60px;
-  }
-
-  .homepage-header h1 {
-    margin: 0;
-    font-size: 18px;
-    color: white;
-  }
-
-  .profile-icon {
-    cursor: pointer;
-    margin-right: 15px;
-    color: white;
-  }
-
-  .container {
-    text-align: center;
-    margin: 0 auto;
-    width: 90%;
-    max-width: 800px;
-    position: relative;
-    top: 80px;
-    height: 100%;
-  }
-
-  .progress-indicator {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
-
-  .progress-circle {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.3);
-    transition: background-color 0.3s;
-  }
-
-  .progress-circle.active {
-    background-color: white;
-  }
-
-  .code {
-    background-color: rgba(2, 2, 66, 1);
-    font-family: Arial, sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    white-space: pre-wrap;
-    text-align: left;
-    padding: 15px;
-    border-radius: 5px;
-    color: white;
-  }
-
-  .blank-input {
-    background-color: rgb(22, 22, 107);
-    color: white;
-    border: 1px solid rgb(10, 10, 66);
-    border-radius: 3px;
-    padding: 5px;
-    text-align: left;
-    font-family: 'Courier New', monospace;
-    font-size: 15px;
-    width: auto; /* Width will be set dynamically */
-  }
-
-  .run-button {
-    position: absolute;
-    bottom: 90px;
-    left: 0px;
-    background-color: rgb(2, 2, 39);
-    border-radius: 10px;
-    border: 3px solid rgba(90, 100, 255, 1);
-    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
-    color: white;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 25px;
-    font-weight: bold;
-    margin: 10px;
-    text-align: center;
-    padding: 10px;
-    height: 7%;
-    width: 60%;
-    cursor: pointer;
-    transition: all 0.1s ease-in-out;
-  }
-
-  .run-button:active {
-    background-color: rgb(2, 2, 39);
-    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
-    transform: translateY(10px);
-  }
-  
-  .reset-button {
-    position: absolute;
-    bottom: 90px;
-    right: 0px;
-    background-color: rgb(2, 2, 39);
-    border-radius: 10px;
-    border: 3px solid rgba(90, 100, 255, 1);
-    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
-    color: white;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 10px;
-    text-align: center;
-    padding: 10px;
-    width: 30%;
-    height: 7%;
-    cursor: pointer;
-    transition: all 0.1s ease-in-out;
-  }
-
-  .reset-button:active {
-    background-color: rgb(2, 2, 39);
-    box-shadow: 0px 2px 0px rgba(90, 100, 255, 1);
-    transform: translateY(10px);
-  }
-
-  .run-button:hover, .reset-button:hover {
-    background-color: #0056b3;
-  }
-
-  .result {
-    margin-top: 20px;
-    font-size: 1.2em;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .correct {
-    background-color: green !important;
-  }
-
-  .incorrect {
-    background-color: red !important;
-  }
-
-  .shake {
-    animation: shake 0.5s ease-in-out;
-  }
-
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-  }
-
-  .answer-button {
-    background-color: rgba(90, 100, 255, 1);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    margin: 5px;
-    cursor: pointer;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-  }
-
-  .answer-button:hover {
-    background-color: #0056b3;
-  }
-
-  .multiple-choice-button {
-    background-color: rgba(90, 100, 255, 1);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    transition: background-color 0.2s;
-  }
-
-  .multiple-choice-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .multiple-choice-container {
-    margin-top: 15px;
-  }
-
-  @media (max-width: 600px) {
     .homepage-header img {
-      height: 40px;
-      width: 40px;
+      height: 60px;
+      width: 60px;
     }
 
     .homepage-header h1 {
-      font-size: 16px;
+      margin: 0;
+      font-size: 18px;
+      color: white;
     }
 
-    .container {
-      top: 60px;
+    /* Main Content */
+    .games-container {
+      padding: 80px 20px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      height: calc(100vh - 180px);
+      overflow-y: auto;
     }
 
-    .code {
-      font-size: 13px;
-      padding: 10px;
+    .game-card {
+      width: 90%;
+      max-width: 400px;
+      background: linear-gradient(135deg, rgba(90, 100, 255, 0.1), rgba(1, 1, 27, 0.8));
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(90, 100, 255, 0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
 
-    .blank-input {
-      font-size: 13px;
+    .game-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(90, 100, 255, 0.2);
+      border-color: rgba(90, 100, 255, 0.6);
     }
 
-    .run-button, .reset-button {
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, 
+                  rgba(90, 100, 255, 0.1) 0%, 
+                  rgba(90, 100, 255, 0) 50%, 
+                  rgba(90, 100, 255, 0.1) 100%);
+      z-index: 1;
+      transition: all 0.5s ease;
+      opacity: 0;
+    }
+
+    .game-card:hover::before {
+      opacity: 1;
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .game-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      position: relative;
+      z-index: 2;
+    }
+
+    .game-icon {
+      font-size: 50px;
+      text-align: center;
+      margin-bottom: 15px;
+      color: rgba(90, 100, 255, 1);
+      transition: all 0.3s ease;
+    }
+
+    .game-card:hover .game-icon {
+      transform: scale(1.1);
+      color: white;
+    }
+
+    .game-desc {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
       font-size: 14px;
-      padding: 10px 16px;
+      position: relative;
+      z-index: 2;
     }
 
-    .result {
-      font-size: 1em;
+    /* Type Fast Card */
+    .type-fast {
+      animation-delay: 0.1s;
     }
 
-    .progress-circle {
-      width: 8px;
-      height: 8px;
+    /* Fill the Blank Card */
+    .fill-blank {
+      animation-delay: 0.2s;
     }
 
-    .multiple-choice-button {
-      font-size: 12px;
-      padding: 8px 10px;
+    /* Quizziverse Card */
+    .quizziverse {
+      animation-delay: 0.3s;
     }
-    .navbar a {
-        padding: 5px 8px;
-      }
-      
-      .navbar a i {
-        font-size: 1.2rem;
-      }
-      
-      .navbar a span {
-        font-size: 0.6rem;
-      }
-  }
-  i {
-      font-size: 20px;
-  }
 
-  /* Navigation Bar */
-  .navbar {
+    /* Navigation Bar */
+    .navbar {
       position: fixed;
       bottom: 0;
       width: 100%;
@@ -352,6 +214,41 @@
       font-weight: 500;
       transition: all 0.3s ease;
     }
+
+    @media (max-width: 600px) {
+      .homepage-header img {
+        height: 40px;
+        width: 40px;
+      }
+
+      .homepage-header h1 {
+        font-size: 16px;
+      }
+
+      .navbar a {
+        padding: 5px 8px;
+      }
+      
+      .navbar a i {
+        font-size: 1.2rem;
+      }
+      
+      .navbar a span {
+        font-size: 0.6rem;
+      }
+
+      .game-card {
+        padding: 20px;
+      }
+
+      .game-title {
+        font-size: 20px;
+      }
+
+      .game-icon {
+        font-size: 40px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -363,47 +260,58 @@
     <i data-lucide="user" class="profile-icon"></i>
   </div>
 
+  <div class="games-container">
+    <!-- Type Fast Game -->
+    <div class="game-card animate__animated animate__fadeInUp type-fast" onclick="location.href='/games/typeracer.html'">
+      <div class="game-icon">
+        <i data-lucide="keyboard"></i>
+      </div>
+      <h2 class="game-title">Type Fast</h2>
+      <p class="game-desc">Test your typing speed with Python code snippets. Race against the clock!</p>
+    </div>
+
+    <!-- Fill the Blank Game -->
+    <div class="game-card animate__animated animate__fadeInUp fill-blank" onclick="location.href='/games/fillblank.html'">
+      <div class="game-icon">
+        <i data-lucide="square-code"></i>
+      </div>
+      <h2 class="game-title">Fill the Blank</h2>
+      <p class="game-desc">Complete the missing Python code to make the program work correctly.</p>
+    </div>
+
+    <!-- Quizziverse Game -->
+    <div class="game-card animate__animated animate__fadeInUp quizziverse" onclick="location.href='/games/quizziverse.html'">
+      <div class="game-icon">
+        <i data-lucide="help-circle"></i>
+      </div>
+      <h2 class="game-title">Quizziverse</h2>
+      <p class="game-desc">Challenge your Python knowledge with timed quizzes and multiple levels.</p>
+    </div>
+  </div>
+
   <nav class="navbar">
     <a href="/homepage.html"><i data-lucide="home"></i> <span>Home</span></a>
-    <a  href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
+    <a href="video-lesson.html"><i data-lucide="play-circle"></i> <span>Video</span></a>
     <a href="interpreter.html"><i data-lucide="code"></i> <span>Compiler</span></a>
     <a class="active" href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a>
     <a href="exercise.html"><i data-lucide="book-open"></i> <span>Exercise</span></a>
   </nav>
 
-
-  <div class="container">
-    <div class="progress-indicator" id="progressIndicator"></div>
-
-    <p id="description"></p>
-    <div class="code" id="codeDisplay"></div>
-
-    <div id="answerButtons"></div>
-
-    <div class="multiple-choice-container" id="multipleChoiceContainer"></div>
-
-    <div class="result hidden" id="result"></div>
-  </div>
-    <button class="run-button" onclick="runCode()">Run</button>
-    <button class="reset-button" onclick="resetGame()">
-        <i data-lucide="rotate-ccw"></i>
-      </button>
-      
-  <audio id="backgroundMusic" autoplay loop muted>
-    <source src="assets_/designUI/sounds/background-music.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-
-  <audio id="correctSound">
-    <source src="/sounds/correct-answer.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-
-  <audio id="incorrectSound">
-    <source src="/sounds/wrong-answer.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-
-  <script src="/javarice/games.js"></script>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Add click effects to game cards
+    document.querySelectorAll('.game-card').forEach(card => {
+      card.addEventListener('click', function() {
+        this.classList.add('animate__pulse');
+        setTimeout(() => {
+          this.classList.remove('animate__pulse');
+          // Navigate to game page after animation
+          window.location.href = this.getAttribute('onclick').match(/'(.*?)'/)[1];
+        }, 300);
+      });
+    });
+  </script>
 </body>
 </html>
